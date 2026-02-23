@@ -1,0 +1,2 @@
+C:/Users/Utilizador/Desktop/CG/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Utilizador/Desktop/CG/build/CMakeFiles/ZERO_CHECK.dir
