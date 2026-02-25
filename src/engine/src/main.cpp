@@ -57,11 +57,13 @@ void renderScene(void) {
               c.camera.lookAt.x,   c.camera.lookAt.y,   c.camera.lookAt.z,
               c.camera.up.x,       c.camera.up.y,       c.camera.up.z);
 
+    // ✅ eixos desenhados ANTES das transformações - ficam fixos
+    drawAxis();
+
+    // só depois aplica as rotações e zoom à figura
     glRotatef(cameraAngleY, 0.0f, 1.0f, 0.0f);
     glRotatef(cameraAngle,  1.0f, 0.0f, 0.0f);
     glScalef(zoom, zoom, zoom);
-
-    drawAxis();
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     for (std::vector<Point> model : vectors) {
@@ -70,6 +72,7 @@ void renderScene(void) {
 
     glutSwapBuffers();
 }
+
 
 void processSpecialKeys(int key, int xx, int yy) {
     switch (key) {
