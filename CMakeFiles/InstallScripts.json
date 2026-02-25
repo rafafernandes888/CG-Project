@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/Utilizador/Desktop/CG/cmake_install.cmake",
+		"C:/Users/Utilizador/Desktop/CG/src/cmake_install.cmake",
+		"C:/Users/Utilizador/Desktop/CG/src/shared/cmake_install.cmake",
+		"C:/Users/Utilizador/Desktop/CG/src/generator/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

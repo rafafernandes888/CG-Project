@@ -1,0 +1,68 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(engine)
+
+file(GLOB SRC_FILES src/*.cpp)
+
+include_directories(${CMAKE_SOURCE_DIR}/libs/rapidxml-1.13)
+
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+include_directories(${CMAKE_SOURCE_DIR}/src/shared/include)
+
+target_link_libraries(${PROJECT_NAME} shared)
+
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
+link_directories(${OPENGL_LIBRARY_DIRS})
+add_definitions(${OPENGL_DEFINITIONS})
+
+if(NOT OPENGL_FOUND)
+    message(FATAL_ERROR "OpenGL not found!")
+endif()
+
+if(WIN32)
+    message(STATUS "Configurando GLUT a partir da pasta 'toolkits'")
+    set(TOOLKITS_FOLDER "${CMAKE_SOURCE_DIR}/toolkits")
+
+    if(NOT EXISTS "${TOOLKITS_FOLDER}/glut/GL/glut.h" OR NOT EXISTS "${TOOLKITS_FOLDER}/glut/glut32.lib")
+        message(FATAL_ERROR "GLUT not found!")
+    endif()
+
+    # ← GLEW e DevIL comentados - não são necessários na Fase 1
+    # if(NOT EXISTS "${TOOLKITS_FOLDER}/glew/GL/glew.h" ...)
+    # if(NOT EXISTS "${TOOLKITS_FOLDER}/devil/IL/il.h" ...)
+
+    include_directories(${TOOLKITS_FOLDER}/glut)
+    link_directories(${TOOLKITS_FOLDER}/glut)
+
+    target_link_libraries(${PROJECT_NAME}
+        ${OPENGL_LIBRARIES}
+        ${TOOLKITS_FOLDER}/glut/glut32.lib
+        # ← sem GLEW nem DevIL
+    )
+
+    if(EXISTS "${TOOLKITS_FOLDER}/glut/glut32.dll")
+        file(COPY ${TOOLKITS_FOLDER}/glut/glut32.dll DESTINATION ${CMAKE_BINARY_DIR})
+        file(COPY ${TOOLKITS_FOLDER}/glut/glut32.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    endif()
+
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated")
+    find_package(GLUT REQUIRED)
+    include_directories(${GLUT_INCLUDE_DIR})
+    link_directories(${GLUT_LIBRARY_DIRS})
+    add_definitions(${GLUT_DEFINITIONS})
+
+    target_link_libraries(${PROJECT_NAME}
+        ${OPENGL_LIBRARIES}
+        ${GLUT_LIBRARIES}
+    )
+
+    if(NOT GLUT_FOUND)
+        message(ERROR ": GLUT not found!")
+    endif()
+endif()
