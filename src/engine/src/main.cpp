@@ -19,6 +19,7 @@ float alpha = 0.0f;
 float beta = 0.0f;
 float camRadius = 5.0f;
 int axis = 1;
+int renderMode = 0; // 0 = linhas, 1 = pontos, 2 = preenchido
 
 Configuration c;
 std::vector<std::vector<Point>> vectors;
@@ -68,7 +69,14 @@ void renderScene(void) {
     drawAxis();
 
     glColor3f(1.0f, 1.0f, 1.0f);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    // aplica o modo de renderização
+    switch (renderMode) {
+        case 0: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  break; // linhas
+        case 1: glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); break; // pontos
+        case 2: glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  break; // preenchido
+    }
+
     for (const auto& model : vectors) {
         drawTriangles(model);
     }
@@ -90,6 +98,9 @@ void processNormalKeys(unsigned char key, int /* x */, int /* y */) {
     switch (key) {
     case 'a':
         axis = !axis;
+        break;
+    case 'm':
+        renderMode = (renderMode + 1) % 3; // alterna entre 0, 1, 2
         break;
     case 'r': {
         float dx = c.camera.position.x - c.camera.lookAt.x;
