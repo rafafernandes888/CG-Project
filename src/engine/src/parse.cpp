@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-Configuration parseConfig(std::string filename) {
+Configuration parseConfig(const std::string& filename) {
     std::cerr << "A abrir: " << filename << std::endl;
 
     std::ifstream file(filename);
@@ -27,8 +27,7 @@ Configuration parseConfig(std::string filename) {
     // window
     char* width = root->first_node("window")->first_attribute("width")->value();
     char* height = root->first_node("window")->first_attribute("height")->value();
-    Window window_info = Window(static_cast<int>(std::stof(width)),
-        static_cast<int>(std::stof(height)));
+    Window window_info = Window(std::stoi(width), std::stoi(height));
 
     // camera
     rapidxml::xml_node<>* camera = root->first_node("camera");

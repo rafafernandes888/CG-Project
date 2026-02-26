@@ -8,7 +8,7 @@ Window::Window() {
   this->height = 0;
 }
 
-Window::Window(float width, float height) {
+Window::Window(int width, int height) {
   this->width = width;
   this->height = height;
 }

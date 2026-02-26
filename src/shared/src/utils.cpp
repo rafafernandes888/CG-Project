@@ -2,15 +2,13 @@
 #include <fstream>
 #include <iostream>
 
-void saveToFile(const std::vector<Point>& points, std::string filepath) {
+void saveToFile(const std::vector<Point>& points, const std::string& filepath) {
     std::ofstream file(filepath);
 
     if (file.is_open()) {
-        // Cabeçalho: número total de vértices (ajuda muito na Fase 1) 
         file << points.size() << "\n"; 
         
         for (const auto& point : points) {
-            // Escreve cada vértice: x y z [cite: 11]
             file << point.x << " " << point.y << " " << point.z << "\n";
         }
         file.close();
@@ -20,7 +18,7 @@ void saveToFile(const std::vector<Point>& points, std::string filepath) {
     }
 }
 
-std::vector<Point> parse3Dfile(std::string filename) {
+std::vector<Point> parse3Dfile(const std::string& filename) {
     std::vector<Point> points;
     std::ifstream file(filename);
     int numVertices;

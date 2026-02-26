@@ -10,6 +10,5 @@
 
 void drawTriangles(const std::vector<Point>& points);
 
-void drawFile(char* filename);
 
 #endif  // DRAW_HPP

@@ -6,13 +6,12 @@
 
 class Window {
  public:
-  float width;
-  float height;
+  int width;
+  int height;
 
   Window();
-  Window(float width, float height);
+  Window(int width, int height);
 
-  // std::string toString();
 };
 
 #endif  // WINDOW_HPP
