@@ -1,6 +1,0 @@
-﻿  Building Custom Rule C:/Users/Utilizador/Desktop/CG/src/generator/CMakeLists.txt
-  main.cpp
-C:\Users\Utilizador\Desktop\CG\src\generator\src\main.cpp(33,38): warning C4101: 'e': variável local não referenciada
-  plane.cpp
-  Gerando Código...
-  generator.vcxproj -> C:\Users\Utilizador\Desktop\CG\src\generator\Debug\generator.exe

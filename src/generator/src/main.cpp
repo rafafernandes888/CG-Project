@@ -2,42 +2,47 @@
 #include <string>
 
 #include "../include/plane.hpp"
+#include "../include/sphere.hpp"
+#include "../include/box.hpp"
 #include "../include/cone.hpp"
 
-
 void generateFigure(int argc, char* argv[]) {
-  if (argc < 5) {
-    std::cerr << "Insufficient arguments\n";
-    return;
-  }
+    if (argc < 5) {
+        std::cerr << "Insufficient arguments\n";
+        return;
+    }
 
-  char* fileName = argv[argc - 1];
-  std::string figureName = argv[1];
+    char* fileName = argv[argc - 1];
+    std::string figureName = argv[1];
 
-  if (figureName == "plane" && argc == 5) {
-    // Generate Plane
-    std::cout << "Generating Plane\n";  // Added newline here
-    float length = std::stof(argv[2]);
-    int divisions = std::stoi(argv[3]);
+    if (figureName == "plane" && argc == 5) {
+        std::cout << "A gerar Plano...\n";
+        generatePlane(std::stof(argv[2]), std::stoi(argv[3]), fileName);
 
-    generatePlane(length, divisions,
-                  fileName);  // Assuming saveToFile is available
-  } else if (figureName == "cone" && argc == 7) {
-    // Generate Cone
-    std::cout << "Generating Cone\n";
-    float radius = std::stof(argv[2]);
-    float height = std::stof(argv[3]);
-    int slices = std::stoi(argv[4]);
-    int stacks = std::stoi(argv[5]);
+    } else if (figureName == "sphere" && argc == 6) {
+        std::cout << "A gerar Esfera...\n";
+        // sphere <radius> <slices> <stacks> <file>
+        generateSphere(std::stof(argv[2]), std::stoi(argv[3]), std::stoi(argv[4]), fileName);
 
-    generateCone(radius, height, slices, stacks, fileName);
-  
-  } else {
-    std::cerr << "Invalid arguments\n";
-  }
+    } else if (figureName == "box" && argc == 5) {
+        std::cout << "A gerar Caixa...\n";
+        generateBox(std::stof(argv[2]), std::stoi(argv[3]), fileName);
+
+    } else if (figureName == "cone" && argc == 7) {
+        std::cout << "A gerar Cone...\n";
+        // cone <radius> <height> <slices> <stacks> <file>
+        generateCone(std::stof(argv[2]), std::stof(argv[3]), std::stoi(argv[4]), std::stoi(argv[5]), fileName);
+
+    } else {
+        std::cerr << "Invalid arguments\n";
+        std::cerr << "  generator plane <length> <divisions> <file>\n";
+        std::cerr << "  generator sphere <radius> <slices> <stacks> <file>\n";
+        std::cerr << "  generator box <length> <divisions> <file>\n";
+        std::cerr << "  generator cone <radius> <height> <slices> <stacks> <file>\n";
+    }
 }
 
 int main(int argc, char* argv[]) {
-  generateFigure(argc, argv);
-  return 0;
+    generateFigure(argc, argv);
+    return 0;
 }

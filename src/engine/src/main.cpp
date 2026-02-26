@@ -1,6 +1,6 @@
 #ifdef _WIN32
-  #define GLUT_BUILDING_LIB
-  #include <windows.h>
+#define GLUT_BUILDING_LIB
+#include <windows.h>
 #endif
 
 #ifdef __APPLE__
@@ -15,9 +15,9 @@
 #include "draw.hpp"
 #include "parse.hpp"
 
-float cameraAngle  = 0.0f;
-float cameraAngleY = 0.0f;
-float zoom = 1.0f;
+float alpha = 0.0f;
+float beta = 0.0f;
+float camRadius = 5.0f;
 int axis = 1;
 
 Configuration c;
@@ -28,7 +28,6 @@ void reshape(int w, int h) {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // ✅ nearP e farP em vez de near e far
     gluPerspective(c.camera.fov, aspect_ratio, c.camera.nearP, c.camera.farP);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -37,13 +36,13 @@ void reshape(int w, int h) {
 void drawAxis(void) {
     if (axis) {
         glBegin(GL_LINES);
-        glColor3f(50.0f, 0.0f, 0.0f);
+        glColor3f(1.0f, 0.0f, 0.0f);
         glVertex3f(-500.0f, 0.0f, 0.0f);
         glVertex3f(500.0f, 0.0f, 0.0f);
-        glColor3f(0.0f, 50.0f, 0.0f);
+        glColor3f(0.0f, 1.0f, 0.0f);
         glVertex3f(0.0f, -500.0f, 0.0f);
         glVertex3f(0.0f, 500.0f, 0.0f);
-        glColor3f(0.0f, 0.0f, 50.0f);
+        glColor3f(0.0f, 0.0f, 1.0f);
         glVertex3f(0.0f, 0.0f, -500.0f);
         glVertex3f(0.0f, 0.0f, 500.0f);
         glEnd();
@@ -53,62 +52,71 @@ void drawAxis(void) {
 void renderScene(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt(c.camera.position.x, c.camera.position.y, c.camera.position.z,
-              c.camera.lookAt.x,   c.camera.lookAt.y,   c.camera.lookAt.z,
-              c.camera.up.x,       c.camera.up.y,       c.camera.up.z);
 
-    // ✅ eixos desenhados ANTES das transformações - ficam fixos
+    float lx = c.camera.lookAt.x;
+    float ly = c.camera.lookAt.y;
+    float lz = c.camera.lookAt.z;
+
+    float camX = lx + camRadius * cosf(beta) * sinf(alpha);
+    float camY = ly + camRadius * sinf(beta);
+    float camZ = lz + camRadius * cosf(beta) * cosf(alpha);
+
+    gluLookAt(camX, camY, camZ,
+        lx, ly, lz,
+        0.0f, 1.0f, 0.0f);
+
     drawAxis();
 
-    // só depois aplica as rotações e zoom à figura
-    glRotatef(cameraAngleY, 0.0f, 1.0f, 0.0f);
-    glRotatef(cameraAngle,  1.0f, 0.0f, 0.0f);
-    glScalef(zoom, zoom, zoom);
-
+    glColor3f(1.0f, 1.0f, 1.0f);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    for (std::vector<Point> model : vectors) {
+    for (const auto& model : vectors) {
         drawTriangles(model);
     }
 
     glutSwapBuffers();
 }
 
-
-void processSpecialKeys(int key, int xx, int yy) {
+void processSpecialKeys(int key, int /* xx */, int /* yy */) {
     switch (key) {
-        case GLUT_KEY_LEFT:  cameraAngle  -= 1.0f; break;
-        case GLUT_KEY_RIGHT: cameraAngle  += 1.0f; break;
-        case GLUT_KEY_UP:    cameraAngleY += 1.0f; break;
-        case GLUT_KEY_DOWN:  cameraAngleY -= 1.0f; break;
+    case GLUT_KEY_LEFT:  alpha -= 0.05f; break;
+    case GLUT_KEY_RIGHT: alpha += 0.05f; break;
+    case GLUT_KEY_UP:    beta += 0.05f; break;
+    case GLUT_KEY_DOWN:  beta -= 0.05f; break;
     }
     glutPostRedisplay();
 }
 
-void processNormalKeys(unsigned char key, int x, int y) {
-    float value = zoom * 0.1f;
+void processNormalKeys(unsigned char key, int /* x */, int /* y */) {
     switch (key) {
-        case 'a': axis = !axis; break;
-        case 'r': cameraAngle = 0; cameraAngleY = 0; zoom = 1.0f; break;
-        case 'o': zoom -= value; break;
-        case 'i': zoom += value; break;
+    case 'a':
+        axis = !axis;
+        break;
+    case 'r': {
+        float dx = c.camera.position.x - c.camera.lookAt.x;
+        float dy = c.camera.position.y - c.camera.lookAt.y;
+        float dz = c.camera.position.z - c.camera.lookAt.z;
+        camRadius = sqrtf(dx * dx + dy * dy + dz * dz);
+        beta = asinf(dy / camRadius);
+        alpha = atan2f(dx, dz);
+        break;
+    }
+    case 'o': camRadius += 0.2f; break;
+    case 'i': camRadius -= 0.2f; if (camRadius < 0.1f) camRadius = 0.1f; break;
     }
     glutPostRedisplay();
 }
 
 void setupConfig(char* arg) {
-    std::cout << "setupConfig chamado com: " << arg << std::endl;  // ← NOVO
-    std::cout.flush();  // ← força o print antes do crash
-    
-    std::string filename;
-    filename.assign(arg);
-
-    std::cout << "A chamar parseConfig..." << std::endl;  // ← NOVO
-    std::cout.flush();
-
+    std::string filename(arg);
     c = parseConfig(filename);
 
-    std::cout << "parseConfig OK!" << std::endl;  // ← NOVO
-    std::cout.flush();
+    float dx = c.camera.position.x - c.camera.lookAt.x;
+    float dy = c.camera.position.y - c.camera.lookAt.y;
+    float dz = c.camera.position.z - c.camera.lookAt.z;
+    camRadius = sqrtf(dx * dx + dy * dy + dz * dz);
+    beta = asinf(dy / camRadius);
+    alpha = atan2f(dx, dz);
+
     for (const auto& group : c.groups) {
         for (const auto& model : group.models) {
             vectors.push_back(model.vertices);
@@ -123,21 +131,13 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    std::cout << "A carregar: " << argv[1] << std::endl;  // ← NOVO
-    
     setupConfig(argv[1]);
-    
-    std::cout << "Config carregada!" << std::endl;        // ← NOVO
-    std::cout << "Janela: " << c.window.width << "x" << c.window.height << std::endl; // ← NOVO
-    std::cout << "Modelos: " << vectors.size() << std::endl; // ← NOVO
 
     glutInit(&argc, argv);
-    std::cout << "GLUT iniciado!" << std::endl;           // ← NOVO
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(c.window.width, c.window.height);
     glutCreateWindow("CG@DI");
-    std::cout << "Janela criada!" << std::endl;           // ← NOVO
 
     glutIdleFunc(renderScene);
     glutDisplayFunc(renderScene);

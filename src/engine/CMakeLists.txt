@@ -30,22 +30,22 @@ if(WIN32)
         message(FATAL_ERROR "GLUT not found!")
     endif()
 
-    # ← GLEW e DevIL comentados - não são necessários na Fase 1
-    # if(NOT EXISTS "${TOOLKITS_FOLDER}/glew/GL/glew.h" ...)
-    # if(NOT EXISTS "${TOOLKITS_FOLDER}/devil/IL/il.h" ...)
-
     include_directories(${TOOLKITS_FOLDER}/glut)
     link_directories(${TOOLKITS_FOLDER}/glut)
 
     target_link_libraries(${PROJECT_NAME}
         ${OPENGL_LIBRARIES}
         ${TOOLKITS_FOLDER}/glut/glut32.lib
-        # ← sem GLEW nem DevIL
     )
 
+    # copia a DLL automaticamente após cada build
     if(EXISTS "${TOOLKITS_FOLDER}/glut/glut32.dll")
-        file(COPY ${TOOLKITS_FOLDER}/glut/glut32.dll DESTINATION ${CMAKE_BINARY_DIR})
-        file(COPY ${TOOLKITS_FOLDER}/glut/glut32.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${TOOLKITS_FOLDER}/glut/glut32.dll"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/glut32.dll"
+            COMMENT "A copiar glut32.dll para a pasta do executável"
+        )
     endif()
 
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})

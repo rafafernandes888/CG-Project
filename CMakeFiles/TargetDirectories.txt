@@ -1,7 +1,0 @@
-C:/Users/Utilizador/Desktop/CG/CMakeFiles/ALL_BUILD.dir
-C:/Users/Utilizador/Desktop/CG/CMakeFiles/ZERO_CHECK.dir
-C:/Users/Utilizador/Desktop/CG/src/CMakeFiles/ALL_BUILD.dir
-C:/Users/Utilizador/Desktop/CG/src/shared/CMakeFiles/shared.dir
-C:/Users/Utilizador/Desktop/CG/src/shared/CMakeFiles/ALL_BUILD.dir
-C:/Users/Utilizador/Desktop/CG/src/generator/CMakeFiles/generator.dir
-C:/Users/Utilizador/Desktop/CG/src/generator/CMakeFiles/ALL_BUILD.dir
