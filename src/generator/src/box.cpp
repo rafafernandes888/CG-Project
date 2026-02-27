@@ -17,7 +17,6 @@ std::vector<Point> boxTriangles(float length, int divisions) {
       float v2 = v1 + step;
       float u2 = u1 + step;
 
-      // Front Face (z = +halfSize)
       points.push_back(Point(v1, u1, halfSize));
       points.push_back(Point(v2, u2, halfSize));
       points.push_back(Point(v1, u2, halfSize));
@@ -26,7 +25,6 @@ std::vector<Point> boxTriangles(float length, int divisions) {
       points.push_back(Point(v2, u1, halfSize));
       points.push_back(Point(v2, u2, halfSize));
 
-      // Back Face (z = -halfSize)
       points.push_back(Point(v1, u1, -halfSize));
       points.push_back(Point(v1, u2, -halfSize));
       points.push_back(Point(v2, u2, -halfSize));
@@ -35,7 +33,6 @@ std::vector<Point> boxTriangles(float length, int divisions) {
       points.push_back(Point(v2, u2, -halfSize));
       points.push_back(Point(v2, u1, -halfSize));
 
-      // Left Face (x = -halfSize)
       points.push_back(Point(-halfSize, v1, u1));
       points.push_back(Point(-halfSize, v1, u2));
       points.push_back(Point(-halfSize, v2, u2));
@@ -44,7 +41,6 @@ std::vector<Point> boxTriangles(float length, int divisions) {
       points.push_back(Point(-halfSize, v2, u2));
       points.push_back(Point(-halfSize, v2, u1));
 
-      // Right Face (x = +halfSize)
       points.push_back(Point(halfSize, v1, u1));
       points.push_back(Point(halfSize, v2, u1));
       points.push_back(Point(halfSize, v2, u2));
@@ -53,7 +49,6 @@ std::vector<Point> boxTriangles(float length, int divisions) {
       points.push_back(Point(halfSize, v2, u2));
       points.push_back(Point(halfSize, v1, u2));
 
-      // Top Face (y = +halfSize)
       points.push_back(Point(v1, halfSize, u1));
       points.push_back(Point(v1, halfSize, u2));
       points.push_back(Point(v2, halfSize, u2));
@@ -62,7 +57,6 @@ std::vector<Point> boxTriangles(float length, int divisions) {
       points.push_back(Point(v2, halfSize, u2));
       points.push_back(Point(v2, halfSize, u1));
 
-      // Bottom Face (y = -halfSize)
       points.push_back(Point(v1, -halfSize, u1));
       points.push_back(Point(v2, -halfSize, u1));
       points.push_back(Point(v2, -halfSize, u2));

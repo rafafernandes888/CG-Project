@@ -23,12 +23,10 @@ std::vector<Point> planeTriangles(float length, int divisions) {
       Point p3(x1, y1, z2);
       Point p4(x2, y1, z2);
 
-      // Triângulo 1: p1 → p3 → p4
       points.push_back(p1);
       points.push_back(p3);
       points.push_back(p4);
 
-      // Triângulo 2: p1 → p4 → p2
       points.push_back(p1);
       points.push_back(p4);
       points.push_back(p2);

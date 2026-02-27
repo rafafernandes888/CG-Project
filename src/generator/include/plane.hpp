@@ -7,4 +7,4 @@
 
 bool generatePlane(float length, int divisions, const char* filepath);
 
-#endif // PLANE_HPP
+#endif 

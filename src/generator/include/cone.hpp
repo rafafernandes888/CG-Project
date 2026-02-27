@@ -5,4 +5,4 @@
 
 bool generateCone(float radius, float height, int slices, int stacks, const char* filepath);
 
-#endif // CONE_HPP
+#endif 
