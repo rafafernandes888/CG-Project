@@ -27,12 +27,17 @@ $ cmake .
 $ make
 ```
 
-### 🪟 Windows (feito em Windows)
+### 🪟 Windows
 1. Aceda ao terminal do `cmake`
 2. Selecione a pasta principal e a respetiva pasta `build`
 3. Configure o projeto com as definições adequadas (Usar "Win 32")
 4. Selecione a pasta `toolkits` na raiz do projeto
 5. Configure e gere o projeto
+6. Após o Generate, execute o seguinte comando para compilar:
+
+```sh
+cmake --build build --config Debug
+```
 
 Isto irá gerar os executáveis dentro da pasta `build/`.
 
