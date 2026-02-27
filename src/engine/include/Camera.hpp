@@ -10,12 +10,12 @@ class Camera {
   Point position;
   Point lookAt;
   Point up;
-  float fov;
+  int fov;
   float nearP;
   float farP;
 
   Camera();
-  Camera(Point position, Point lookAt, Point up, float fov, float nearP,
+  Camera(Point position, Point lookAt, Point up, int fov, float nearP,
          float farP);
 
 };

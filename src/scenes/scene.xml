@@ -8,7 +8,7 @@
     </camera>
     <group> 
           <models> 
-            <model file="plane.3d" /> 
+            <model file="plane_2_3.3d" /> 
          </models>
      </group>
 </world>

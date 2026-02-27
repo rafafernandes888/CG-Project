@@ -27,10 +27,10 @@ $ cmake .
 $ make
 ```
 
-### 🪟 Windows
+### 🪟 Windows (feito em Windows)
 1. Aceda ao terminal do `cmake`
 2. Selecione a pasta principal e a respetiva pasta `build`
-3. Configure o projeto com as definições adequadas
+3. Configure o projeto com as definições adequadas (Usar "Win 32")
 4. Selecione a pasta `toolkits` na raiz do projeto
 5. Configure e gere o projeto
 
@@ -49,7 +49,7 @@ $ ./generator plane 2 3 plane_2_3.3d
 
 # Windows
 $ cd build\src\generator\Debug
-$ .\generator.exe plane 2 3 "..\..\..\..\plane_2_3.3d
+$ .\generator.exe plane 2 3 "..\..\..\..\src\models\plane_2_3.3d"
 ```
 
 **Lista de figuras e inputs**:
@@ -72,7 +72,7 @@ $ ./engine ../src/scenes/test.xml
 
 # Windows
 $ cd build\src\engine\Debug
-$ .\engine.exe ..\src\scenes\test.xml
+$ .\engine.exe ..\..\..\..\src\scenes\test.xml
 ```
 
 Isto irá carregar e renderizar a cena descrita no XML.
