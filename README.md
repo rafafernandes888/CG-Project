@@ -19,12 +19,6 @@ CG/
 └── README.md
 ```
 
-## 🛠 Requisitos
-Para compilar e executar o projeto, certifique-se de ter instalado:
-- **CMake** (3.10+)
-- **Compilador C++**
-- **OpenGL** e **GLUT**
-
 ## 🚀 Compilação
 
 ### 🐧 Linux / Mac
@@ -55,7 +49,7 @@ $ ./generator plane 2 3 plane_2_3.3d
 
 # Windows
 $ cd build\src\generator\Debug
-$ .\generator.exe plane 2 3 plane_2_3.3d
+$ .\generator.exe plane 2 3 "..\..\..\..\plane_2_3.3d
 ```
 
 **Lista de figuras e inputs**:
@@ -99,4 +93,8 @@ Isto irá carregar e renderizar a cena descrita no XML.
 
 ## ✍️ Desenvolvido por
 
-- [Rafael Fernandes](https://github.com/rafafernandes888)
+- [Jorge Rafael Machado Fernandes](https://github.com/rafafernandes888)
+
+- [Diogo Teixeira Fernandes](https://github.com/diogo7fernandes)
+
+- [Filipe Teixeira Viana](https://github.com/ftviana)
