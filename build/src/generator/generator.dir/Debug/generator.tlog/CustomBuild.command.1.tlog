@@ -1,0 +1,10 @@
+^C:\USERS\UTILIZADOR\DESKTOP\CG\SRC\GENERATOR\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Utilizador/Desktop/CG -BC:/Users/Utilizador/Desktop/CG/build --check-stamp-file C:/Users/Utilizador/Desktop/CG/build/src/generator/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

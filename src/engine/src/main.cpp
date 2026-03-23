@@ -12,24 +12,27 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <iostream>
+#include <string>
+
 #include "draw.hpp"
-#include "parse.hpp"
+#include "Parse.hpp"
 
 float alpha = 0.0f;
 float beta = 0.0f;
 float camRadius = 5.0f;
 int axis = 1;
-int renderMode = 0; // 0 = linhas, 1 = pontos, 2 = preenchido
+int renderMode = 0;
 
 Configuration c;
-std::vector<std::vector<Point>> vectors;
 
 void reshape(int w, int h) {
     float aspect_ratio = (float)w / (float)h;
+
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(c.camera.fov, aspect_ratio, c.camera.nearP, c.camera.farP);
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -37,15 +40,19 @@ void reshape(int w, int h) {
 void drawAxis(void) {
     if (axis) {
         glBegin(GL_LINES);
+
         glColor3f(1.0f, 0.0f, 0.0f);
         glVertex3f(-500.0f, 0.0f, 0.0f);
         glVertex3f(500.0f, 0.0f, 0.0f);
+
         glColor3f(0.0f, 1.0f, 0.0f);
         glVertex3f(0.0f, -500.0f, 0.0f);
         glVertex3f(0.0f, 500.0f, 0.0f);
+
         glColor3f(0.0f, 0.0f, 1.0f);
         glVertex3f(0.0f, 0.0f, -500.0f);
         glVertex3f(0.0f, 0.0f, 500.0f);
+
         glEnd();
     }
 }
@@ -63,57 +70,65 @@ void renderScene(void) {
     float camZ = lz + camRadius * cosf(beta) * cosf(alpha);
 
     gluLookAt(camX, camY, camZ,
-        lx, ly, lz,
-        0.0f, 1.0f, 0.0f);
+              lx, ly, lz,
+              0.0f, 1.0f, 0.0f);
 
     drawAxis();
 
-    glColor3f(1.0f, 1.0f, 1.0f);
-
-    // aplica o modo de renderização
     switch (renderMode) {
-        case 0: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  break; // linhas
-        case 1: glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); break; // pontos
-        case 2: glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  break; // preenchido
+        case 0: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  break;
+        case 1: glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); break;
+        case 2: glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  break;
     }
 
-    for (const auto& model : vectors) {
-        drawTriangles(model);
-    }
+    glColor3f(1.0f, 1.0f, 1.0f);
+    drawGroup(c.root);
 
     glutSwapBuffers();
 }
 
-void processSpecialKeys(int key, int /* xx */, int /* yy */) {
+void processSpecialKeys(int key, int, int) {
     switch (key) {
-    case GLUT_KEY_LEFT:  alpha -= 0.05f; break;
-    case GLUT_KEY_RIGHT: alpha += 0.05f; break;
-    case GLUT_KEY_UP:    beta += 0.05f; break;
-    case GLUT_KEY_DOWN:  beta -= 0.05f; break;
+        case GLUT_KEY_LEFT:  alpha -= 0.05f; break;
+        case GLUT_KEY_RIGHT: alpha += 0.05f; break;
+        case GLUT_KEY_UP:    beta += 0.05f; break;
+        case GLUT_KEY_DOWN:  beta -= 0.05f; break;
     }
+
     glutPostRedisplay();
 }
 
-void processNormalKeys(unsigned char key, int /* x */, int /* y */) {
+void processNormalKeys(unsigned char key, int, int) {
     switch (key) {
-    case 'a':
-        axis = !axis;
-        break;
-    case 'm':
-        renderMode = (renderMode + 1) % 3; // alterna entre 0, 1, 2
-        break;
-    case 'r': {
-        float dx = c.camera.position.x - c.camera.lookAt.x;
-        float dy = c.camera.position.y - c.camera.lookAt.y;
-        float dz = c.camera.position.z - c.camera.lookAt.z;
-        camRadius = sqrtf(dx * dx + dy * dy + dz * dz);
-        beta = asinf(dy / camRadius);
-        alpha = atan2f(dx, dz);
-        break;
+        case 'a':
+            axis = !axis;
+            break;
+
+        case 'm':
+            renderMode = (renderMode + 1) % 3;
+            break;
+
+        case 'r': {
+            float dx = c.camera.position.x - c.camera.lookAt.x;
+            float dy = c.camera.position.y - c.camera.lookAt.y;
+            float dz = c.camera.position.z - c.camera.lookAt.z;
+
+            camRadius = sqrtf(dx * dx + dy * dy + dz * dz);
+            beta = asinf(dy / camRadius);
+            alpha = atan2f(dx, dz);
+            break;
+        }
+
+        case 'o':
+            camRadius += 0.2f;
+            break;
+
+        case 'i':
+            camRadius -= 0.2f;
+            if (camRadius < 0.1f) camRadius = 0.1f;
+            break;
     }
-    case 'o': camRadius += 0.2f; break;
-    case 'i': camRadius -= 0.2f; if (camRadius < 0.1f) camRadius = 0.1f; break;
-    }
+
     glutPostRedisplay();
 }
 
@@ -124,15 +139,10 @@ void setupConfig(char* arg) {
     float dx = c.camera.position.x - c.camera.lookAt.x;
     float dy = c.camera.position.y - c.camera.lookAt.y;
     float dz = c.camera.position.z - c.camera.lookAt.z;
+
     camRadius = sqrtf(dx * dx + dy * dy + dz * dz);
     beta = asinf(dy / camRadius);
     alpha = atan2f(dx, dz);
-
-    for (const auto& group : c.groups) {
-        for (const auto& model : group.models) {
-            vectors.push_back(model.vertices);
-        }
-    }
 }
 
 int main(int argc, char** argv) {

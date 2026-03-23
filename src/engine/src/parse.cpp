@@ -1,22 +1,85 @@
 #include "parse.hpp"
 #include "../../../libs/rapidxml-1.13/rapidxml.hpp"
 #include "../../../src/shared/include/utils.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
+
+Group parseGroup(rapidxml::xml_node<>* groupNode, const std::string& modelsDir) {
+    Group group;
+
+    if (!groupNode) return group;
+
+    // transform
+    rapidxml::xml_node<>* transformNode = groupNode->first_node("transform");
+    if (transformNode) {
+        for (rapidxml::xml_node<>* node = transformNode->first_node();
+             node;
+             node = node->next_sibling()) {
+
+            std::string nodeName = node->name();
+
+            if (nodeName == "translate") {
+                double x = std::stod(node->first_attribute("x")->value());
+                double y = std::stod(node->first_attribute("y")->value());
+                double z = std::stod(node->first_attribute("z")->value());
+                group.translate(x, y, z);
+            }
+            else if (nodeName == "rotate") {
+                double angle = std::stod(node->first_attribute("angle")->value());
+                double x = std::stod(node->first_attribute("x")->value());
+                double y = std::stod(node->first_attribute("y")->value());
+                double z = std::stod(node->first_attribute("z")->value());
+                group.rotate(angle, x, y, z);
+            }
+            else if (nodeName == "scale") {
+                double x = std::stod(node->first_attribute("x")->value());
+                double y = std::stod(node->first_attribute("y")->value());
+                double z = std::stod(node->first_attribute("z")->value());
+                group.scale(x, y, z);
+            }
+        }
+    }
+
+    // models
+    rapidxml::xml_node<>* modelsNode = groupNode->first_node("models");
+    if (modelsNode) {
+        for (rapidxml::xml_node<>* modelNode = modelsNode->first_node("model");
+             modelNode;
+             modelNode = modelNode->next_sibling("model")) {
+
+            std::string file = modelNode->first_attribute("file")->value();
+            group.models.push_back(file);
+
+            std::string fullPath = modelsDir + "/" + file;
+            std::vector<Point> pts = parse3Dfile(fullPath);
+
+            group.points.insert(group.points.end(), pts.begin(), pts.end());
+        }
+    }
+
+    // child groups
+    for (rapidxml::xml_node<>* childNode = groupNode->first_node("group");
+         childNode;
+         childNode = childNode->next_sibling("group")) {
+
+        group.subgroups.push_back(parseGroup(childNode, modelsDir));
+    }
+
+    return group;
+}
 
 Configuration parseConfig(const std::string& filename) {
-    std::cerr << "A abrir: " << filename << std::endl;
-
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error opening the file: " << filename << std::endl;
         exit(1);
     }
-    std::cerr << "Ficheiro aberto!" << std::endl;
 
     std::string xmlContent((std::istreambuf_iterator<char>(file)),
-        std::istreambuf_iterator<char>());
+                           std::istreambuf_iterator<char>());
     file.close();
 
     rapidxml::xml_document<> doc;
@@ -24,65 +87,45 @@ Configuration parseConfig(const std::string& filename) {
 
     rapidxml::xml_node<>* root = doc.first_node("world");
 
-    // window
     char* width = root->first_node("window")->first_attribute("width")->value();
     char* height = root->first_node("window")->first_attribute("height")->value();
-    Window window_info = Window(std::stoi(width), std::stoi(height));
+    Window window_info(std::stoi(width), std::stoi(height));
 
-    // camera
     rapidxml::xml_node<>* camera = root->first_node("camera");
 
     rapidxml::xml_node<>* position_n = camera->first_node("position");
-    Point position = Point(std::stof(position_n->first_attribute("x")->value()),
+    Point position(
+        std::stof(position_n->first_attribute("x")->value()),
         std::stof(position_n->first_attribute("y")->value()),
-        std::stof(position_n->first_attribute("z")->value()));
+        std::stof(position_n->first_attribute("z")->value())
+    );
 
     rapidxml::xml_node<>* lookAt_n = camera->first_node("lookAt");
-    Point lookAt = Point(std::stof(lookAt_n->first_attribute("x")->value()),
+    Point lookAt(
+        std::stof(lookAt_n->first_attribute("x")->value()),
         std::stof(lookAt_n->first_attribute("y")->value()),
-        std::stof(lookAt_n->first_attribute("z")->value()));
+        std::stof(lookAt_n->first_attribute("z")->value())
+    );
 
     rapidxml::xml_node<>* up_n = camera->first_node("up");
-    Point up = Point(std::stof(up_n->first_attribute("x")->value()),
+    Point up(
+        std::stof(up_n->first_attribute("x")->value()),
         std::stof(up_n->first_attribute("y")->value()),
-        std::stof(up_n->first_attribute("z")->value()));
+        std::stof(up_n->first_attribute("z")->value())
+    );
 
     rapidxml::xml_node<>* projection = camera->first_node("projection");
     float fov = std::stof(projection->first_attribute("fov")->value());
     float nearP = std::stof(projection->first_attribute("near")->value());
     float farP = std::stof(projection->first_attribute("far")->value());
 
-    Camera camera_info = Camera(position, lookAt, up, fov, nearP, farP);
+    Camera camera_info(position, lookAt, up, fov, nearP, farP);
 
-    // models
     std::string scenesDir = filename.substr(0, filename.find_last_of("/\\"));
     std::string modelsDir = scenesDir + "/../models";
 
-    Group group;
-    rapidxml::xml_node<>* models =
-        root->first_node("group")->first_node("models");
+    rapidxml::xml_node<>* rootGroupNode = root->first_node("group");
+    Group rootGroup = parseGroup(rootGroupNode, modelsDir);
 
-    for (rapidxml::xml_node<>* model = models->first_node("model");
-        model;
-        model = model->next_sibling("model"))
-    {
-        Model m;
-        m.filename = std::string(model->first_attribute("file")->value());
-
-        std::string fullPath = modelsDir + "/" + m.filename;
-        m.vertices = parse3Dfile(fullPath);
-
-        if (m.vertices.empty())
-            std::cerr << "Aviso: " << fullPath << " vazio ou nao encontrado\n";
-        else
-            std::cout << "Carregado: " << m.filename
-            << " (" << m.vertices.size() << " vertices)\n";
-
-        group.models.push_back(m);
-    }
-
-    std::vector<Group> groups;
-    groups.push_back(group);
-
-    return Configuration(window_info, camera_info, groups);
+    return Configuration(window_info, camera_info, rootGroup);
 }

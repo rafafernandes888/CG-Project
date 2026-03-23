@@ -1,8 +1,7 @@
 #include "Configuration.hpp"
 
-Configuration::Configuration(Window window, Camera camera,
-                             std::vector<Group> groups) {
+Configuration::Configuration(const Window& window, const Camera& camera, const Group& root) {
     this->window = window;
     this->camera = camera;
-    this->groups = groups;
+    this->root = root;
 }
