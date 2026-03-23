@@ -15,30 +15,74 @@ Group parseGroup(rapidxml::xml_node<>* groupNode, const std::string& modelsDir) 
     // transform
     rapidxml::xml_node<>* transformNode = groupNode->first_node("transform");
     if (transformNode) {
-        for (rapidxml::xml_node<>* node = transformNode->first_node();
-             node;
-             node = node->next_sibling()) {
 
+        auto getAttr = [](rapidxml::xml_node<>* n, const char* attrName, double def, bool required) -> double {
+            if (auto* a = n->first_attribute(attrName)) return std::stod(a->value());
+            if (required) {
+                std::cerr << "XML error: missing attribute '" << attrName
+                        << "' in <" << n->name() << ">\n";
+                exit(1);
+            }
+            return def;
+        };
+
+        bool seenTranslate = false;
+        bool seenRotate    = false;
+        bool seenScale     = false;
+
+        for (rapidxml::xml_node<>* node = transformNode->first_node();
+            node;
+            node = node->next_sibling())
+        {
             std::string nodeName = node->name();
 
             if (nodeName == "translate") {
-                double x = std::stod(node->first_attribute("x")->value());
-                double y = std::stod(node->first_attribute("y")->value());
-                double z = std::stod(node->first_attribute("z")->value());
+                if (seenTranslate) {
+                    std::cerr << "XML error: duplicate <translate> in the same <transform>\n";
+                    exit(1);
+                }
+                seenTranslate = true;
+
+                double x = getAttr(node, "x", 0.0, false);
+                double y = getAttr(node, "y", 0.0, false);
+                double z = getAttr(node, "z", 0.0, false);
                 group.translate(x, y, z);
             }
             else if (nodeName == "rotate") {
-                double angle = std::stod(node->first_attribute("angle")->value());
-                double x = std::stod(node->first_attribute("x")->value());
-                double y = std::stod(node->first_attribute("y")->value());
-                double z = std::stod(node->first_attribute("z")->value());
+                if (seenRotate) {
+                    std::cerr << "XML error: duplicate <rotate> in the same <transform>\n";
+                    exit(1);
+                }
+                seenRotate = true;
+
+                double angle = getAttr(node, "angle", 0.0, true); // angle normalmente é obrigatório
+                double x = getAttr(node, "x", 0.0, true);
+                double y = getAttr(node, "y", 0.0, true);
+                double z = getAttr(node, "z", 0.0, true);
+
+                // (opcional) validar eixo não-nulo
+                if (x == 0.0 && y == 0.0 && z == 0.0) {
+                    std::cerr << "XML error: rotate axis is (0,0,0)\n";
+                    exit(1);
+                }
+
                 group.rotate(angle, x, y, z);
             }
             else if (nodeName == "scale") {
-                double x = std::stod(node->first_attribute("x")->value());
-                double y = std::stod(node->first_attribute("y")->value());
-                double z = std::stod(node->first_attribute("z")->value());
+                if (seenScale) {
+                    std::cerr << "XML error: duplicate <scale> in the same <transform>\n";
+                    exit(1);
+                }
+                seenScale = true;
+
+                double x = getAttr(node, "x", 1.0, false);
+                double y = getAttr(node, "y", 1.0, false);
+                double z = getAttr(node, "z", 1.0, false);
                 group.scale(x, y, z);
+            }
+            else {
+                // opcional: warning para ajudar debug
+                std::cerr << "Warning: unknown transform node <" << nodeName << "> ignored\n";
             }
         }
     }

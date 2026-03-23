@@ -27,7 +27,12 @@ void drawTriangles(const std::vector<Point>& points) {
 void drawGroup(const Group& group) {
     glPushMatrix();
 
-    glMultMatrixd(&group.arr[0][0]);
+    double m[16];
+    for (int row = 0; row < 4; ++row)
+        for (int col = 0; col < 4; ++col)
+            m[col * 4 + row] = group.arr[row][col];
+
+    glMultMatrixd(m);
 
     drawTriangles(group.points);
 
