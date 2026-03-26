@@ -9,7 +9,7 @@
 
     <group>
         <transform>
-            <translate x="1.2" y="0" z="0" />
+            <translate x="0" y="2" z="0" />
         </transform>
         <models>
             <model file="box_2_3.3d" />
