@@ -424,6 +424,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\Utilizador\Desktop\CG\src\engine\src\Configuration.cpp" />
     <ClCompile Include="C:\Users\Utilizador\Desktop\CG\src\engine\src\Window.cpp" />
     <ClCompile Include="C:\Users\Utilizador\Desktop\CG\src\engine\src\draw.cpp" />
+    <ClCompile Include="C:\Users\Utilizador\Desktop\CG\src\engine\src\group.cpp" />
     <ClCompile Include="C:\Users\Utilizador\Desktop\CG\src\engine\src\main.cpp" />
     <ClCompile Include="C:\Users\Utilizador\Desktop\CG\src\engine\src\parse.cpp" />
   </ItemGroup>

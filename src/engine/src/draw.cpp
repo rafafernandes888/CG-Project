@@ -14,9 +14,10 @@
 #include "draw.hpp"
 
 void drawTriangles(const std::vector<Point>& points) {
+    glLineWidth(2.0f);
     glBegin(GL_TRIANGLES);
     for (size_t i = 0; i + 2 < points.size(); i += 3) {
-        glColor3f(1.0f, 1.0f, 1.0f);
+        glColor3f(0.85f, 0.85f, 0.85f);
         glVertex3f(points[i].x,     points[i].y,     points[i].z);
         glVertex3f(points[i + 1].x, points[i + 1].y, points[i + 1].z);
         glVertex3f(points[i + 2].x, points[i + 2].y, points[i + 2].z);
