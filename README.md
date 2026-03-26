@@ -36,7 +36,7 @@ $ make
 6. Após o Generate, execute o seguinte comando para compilar:
 
 ```sh
-cmake --build build --config Debug
+cmake --build build --config Release
 ```
 
 Isto irá gerar os executáveis dentro da pasta `build/`.
@@ -53,7 +53,7 @@ $ cd build
 $ ./generator plane 2 3 plane_2_3.3d
 
 # Windows
-$ cd build\src\generator\Debug
+$ cd build\src\generator\Release
 $ .\generator.exe plane 2 3 "..\..\..\..\src\models\plane_2_3.3d"
 ```
 
