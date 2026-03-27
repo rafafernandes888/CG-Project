@@ -16,7 +16,7 @@
                 <scale x="5.0" y="5.0" z="5.0" />
             </transform>
             <models>
-                <model file="sphere_1_25_25.3d" />
+                <model file="sphere_1_20_20.3d" />
             </models>
         </group>
 
