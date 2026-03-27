@@ -192,7 +192,7 @@ Configuration parseConfig(const std::string& filename) {
         std::stof(getAttrString(up_n, "z", true))
     );
 
-    float fov = std::stof(getAttrString(projection, "fov", true));
+    int fov = std::stoi(getAttrString(projection, "fov", true));
     float nearP = std::stof(getAttrString(projection, "near", true));
     float farP = std::stof(getAttrString(projection, "far", true));
 

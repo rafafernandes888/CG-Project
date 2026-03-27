@@ -71,7 +71,7 @@ void renderScene(void) {
 
     gluLookAt(camX, camY, camZ,
               lx, ly, lz,
-              0.0f, 1.0f, 0.0f);
+              c.camera.up.x, c.camera.up.y, c.camera.up.z);
 
     drawAxis();
 
