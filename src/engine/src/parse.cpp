@@ -1,6 +1,6 @@
 #include "parse.hpp"
 #include "../../../libs/rapidxml-1.13/rapidxml.hpp"
-#include "../../src/shared/include/utils.hpp"
+#include "../../shared/include/utils.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -27,17 +27,34 @@ static std::string getAttrString(rapidxml::xml_node<>* n, const char* attrName, 
     return "";
 }
 
+// Create a VBO from a vector of points, return the OpenGL buffer ID
+static GLuint createVBO(const std::vector<Point>& pts) {
+    if (pts.empty()) return 0;
+
+    // Build a flat float array
+    std::vector<float> data;
+    data.reserve(pts.size() * 3);
+    for (const auto& p : pts) {
+        data.push_back(p.x);
+        data.push_back(p.y);
+        data.push_back(p.z);
+    }
+
+    GLuint bufferId;
+    glGenBuffers(1, &bufferId);
+    glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * data.size(), data.data(), GL_STATIC_DRAW);
+
+    return bufferId;
+}
+
 Group parseGroup(rapidxml::xml_node<>* groupNode, const std::string& modelsDir) {
     Group group;
-
     if (!groupNode) return group;
 
+    // ---- Parse transforms ----
     rapidxml::xml_node<>* transformNode = groupNode->first_node("transform");
     if (transformNode) {
-        bool seenTranslate = false;
-        bool seenRotate = false;
-        bool seenScale = false;
-
         for (rapidxml::xml_node<>* node = transformNode->first_node();
              node;
              node = node->next_sibling()) {
@@ -45,47 +62,75 @@ Group parseGroup(rapidxml::xml_node<>* groupNode, const std::string& modelsDir) 
             std::string nodeName = node->name();
 
             if (nodeName == "translate") {
-                if (seenTranslate) {
-                    std::cerr << "XML error: duplicate <translate> in the same <transform>\n";
-                    exit(1);
-                }
-                seenTranslate = true;
+                // Check if it's time-based (Catmull-Rom) or static
+                auto* timeAttr = node->first_attribute("time");
+                if (timeAttr) {
+                    // Catmull-Rom translate
+                    Transform t;
+                    t.type = TRANSFORM_TRANSLATE_CATMULLROM;
+                    t.catmullRom.time = std::stof(timeAttr->value());
 
-                double x = getAttrDouble(node, "x", 0.0, false);
-                double y = getAttrDouble(node, "y", 0.0, false);
-                double z = getAttrDouble(node, "z", 0.0, false);
-                group.translate(x, y, z);
+                    auto* alignAttr = node->first_attribute("align");
+                    if (alignAttr) {
+                        std::string alignVal = alignAttr->value();
+                        t.catmullRom.align = (alignVal == "True" || alignVal == "true" || alignVal == "1");
+                    }
+
+                    // Read control points
+                    for (rapidxml::xml_node<>* pointNode = node->first_node("point");
+                         pointNode;
+                         pointNode = pointNode->next_sibling("point")) {
+                        float px = (float)getAttrDouble(pointNode, "x", 0.0, true);
+                        float py = (float)getAttrDouble(pointNode, "y", 0.0, true);
+                        float pz = (float)getAttrDouble(pointNode, "z", 0.0, true);
+                        t.catmullRom.points.push_back(Point(px, py, pz));
+                    }
+
+                    if (t.catmullRom.points.size() < 4) {
+                        std::cerr << "Warning: Catmull-Rom translate needs at least 4 points, got "
+                                  << t.catmullRom.points.size() << "\n";
+                    }
+
+                    group.transforms.push_back(t);
+                } else {
+                    // Static translate
+                    Transform t;
+                    t.type = TRANSFORM_TRANSLATE_STATIC;
+                    t.x = (float)getAttrDouble(node, "x", 0.0, false);
+                    t.y = (float)getAttrDouble(node, "y", 0.0, false);
+                    t.z = (float)getAttrDouble(node, "z", 0.0, false);
+                    group.transforms.push_back(t);
+                }
             }
             else if (nodeName == "rotate") {
-                if (seenRotate) {
-                    std::cerr << "XML error: duplicate <rotate> in the same <transform>\n";
-                    exit(1);
+                auto* timeAttr = node->first_attribute("time");
+                if (timeAttr) {
+                    // Time-based rotation (360 degrees in 'time' seconds)
+                    Transform t;
+                    t.type = TRANSFORM_ROTATE_TIME;
+                    t.rotTime = std::stof(timeAttr->value());
+                    t.x = (float)getAttrDouble(node, "x", 0.0, true);
+                    t.y = (float)getAttrDouble(node, "y", 0.0, true);
+                    t.z = (float)getAttrDouble(node, "z", 0.0, true);
+                    group.transforms.push_back(t);
+                } else {
+                    // Static rotation
+                    Transform t;
+                    t.type = TRANSFORM_ROTATE_STATIC;
+                    t.angle = (float)getAttrDouble(node, "angle", 0.0, true);
+                    t.x = (float)getAttrDouble(node, "x", 0.0, true);
+                    t.y = (float)getAttrDouble(node, "y", 0.0, true);
+                    t.z = (float)getAttrDouble(node, "z", 0.0, true);
+                    group.transforms.push_back(t);
                 }
-                seenRotate = true;
-
-                double angle = getAttrDouble(node, "angle", 0.0, true);
-                double x = getAttrDouble(node, "x", 0.0, true);
-                double y = getAttrDouble(node, "y", 0.0, true);
-                double z = getAttrDouble(node, "z", 0.0, true);
-
-                if (x == 0.0 && y == 0.0 && z == 0.0) {
-                    std::cerr << "XML error: rotate axis is (0,0,0)\n";
-                    exit(1);
-                }
-
-                group.rotate(angle, x, y, z);
             }
             else if (nodeName == "scale") {
-                if (seenScale) {
-                    std::cerr << "XML error: duplicate <scale> in the same <transform>\n";
-                    exit(1);
-                }
-                seenScale = true;
-
-                double x = getAttrDouble(node, "x", 1.0, false);
-                double y = getAttrDouble(node, "y", 1.0, false);
-                double z = getAttrDouble(node, "z", 1.0, false);
-                group.scale(x, y, z);
+                Transform t;
+                t.type = TRANSFORM_SCALE;
+                t.x = (float)getAttrDouble(node, "x", 1.0, false);
+                t.y = (float)getAttrDouble(node, "y", 1.0, false);
+                t.z = (float)getAttrDouble(node, "z", 1.0, false);
+                group.transforms.push_back(t);
             }
             else {
                 std::cerr << "Warning: unknown transform node <" << nodeName << "> ignored\n";
@@ -93,6 +138,7 @@ Group parseGroup(rapidxml::xml_node<>* groupNode, const std::string& modelsDir) 
         }
     }
 
+    // ---- Parse models (load into VBOs) ----
     rapidxml::xml_node<>* modelsNode = groupNode->first_node("models");
     if (modelsNode) {
         for (rapidxml::xml_node<>* modelNode = modelsNode->first_node("model");
@@ -100,14 +146,34 @@ Group parseGroup(rapidxml::xml_node<>* groupNode, const std::string& modelsDir) 
              modelNode = modelNode->next_sibling("model")) {
 
             std::string file = getAttrString(modelNode, "file", true);
-            group.models.push_back(file);
-
             std::string fullPath = modelsDir + "/" + file;
+
             std::vector<Point> pts = parse3Dfile(fullPath);
-            group.points.insert(group.points.end(), pts.begin(), pts.end());
+
+            ModelData md;
+            md.filename = file;
+            md.vertexCount = (int)pts.size();
+            md.vboId = createVBO(pts);
+
+            // Read optional color
+            rapidxml::xml_node<>* colorNode = modelNode->first_node("color");
+            if (colorNode) {
+                // Read either r/g/b (0-255)
+                md.r = getAttrDouble(colorNode, "r", 255.0, false) / 255.0f;
+                md.g = getAttrDouble(colorNode, "g", 255.0, false) / 255.0f;
+                md.b = getAttrDouble(colorNode, "b", 255.0, false) / 255.0f;
+                
+                // Also check capital R/G/B just in case
+                if (colorNode->first_attribute("R")) md.r = getAttrDouble(colorNode, "R", 255.0, false) / 255.0f;
+                if (colorNode->first_attribute("G")) md.g = getAttrDouble(colorNode, "G", 255.0, false) / 255.0f;
+                if (colorNode->first_attribute("B")) md.b = getAttrDouble(colorNode, "B", 255.0, false) / 255.0f;
+            }
+
+            group.models.push_back(md);
         }
     }
 
+    // ---- Parse subgroups ----
     for (rapidxml::xml_node<>* childNode = groupNode->first_node("group");
          childNode;
          childNode = childNode->next_sibling("group")) {

@@ -5,6 +5,7 @@
 #include "../include/sphere.hpp"
 #include "../include/box.hpp"
 #include "../include/cone.hpp"
+#include "../include/bezier.hpp"
 
 void generateFigure(int argc, char* argv[]) {
     if (argc < 5) {
@@ -33,12 +34,18 @@ void generateFigure(int argc, char* argv[]) {
         // cone <radius> <height> <slices> <stacks> <file>
         generateCone(std::stof(argv[2]), std::stof(argv[3]), std::stoi(argv[4]), std::stoi(argv[5]), fileName);
 
+    } else if (figureName == "bezier" && argc == 5) {
+        std::cout << "A gerar Bezier Patch...\n";
+        // bezier <patch_file> <tessellation> <output_file>
+        generateBezier(argv[2], std::stoi(argv[3]), fileName);
+
     } else {
         std::cerr << "Invalid arguments\n";
         std::cerr << "  generator plane <length> <divisions> <file>\n";
         std::cerr << "  generator sphere <radius> <slices> <stacks> <file>\n";
         std::cerr << "  generator box <length> <divisions> <file>\n";
         std::cerr << "  generator cone <radius> <height> <slices> <stacks> <file>\n";
+        std::cerr << "  generator bezier <patch_file> <tessellation> <output_file>\n";
     }
 }
 

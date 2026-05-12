@@ -2,7 +2,7 @@
     <window width="1280" height="800" />
 
     <camera>
-        <position x="5" y="18" z="50" />
+        <position x="10" y="20" z="50" />
         <lookAt x="0" y="0" z="0" />
         <up x="0" y="1" z="0" />
         <projection fov="60" near="1" far="1000" />
@@ -13,232 +13,206 @@
         <!-- ==================== Sun ==================== -->
         <group>
             <transform>
+                <rotate time="20" x="0" y="1" z="0" />
                 <scale x="5.0" y="5.0" z="5.0" />
             </transform>
             <models>
-                <model file="sphere_1_20_20.3d" />
+                <model file="sphere_1_20_20.3d">
+                    <color r="253" g="184" b="19" />
+                </model>
             </models>
         </group>
 
         <!-- ==================== Mercury ==================== -->
         <group>
             <transform>
-                <rotate angle="48" x="0" y="1" z="0" />
+                <rotate time="8" x="0" y="1" z="0" />
                 <translate x="8" y="0" z="0" />
-                <scale x="0.30" y="0.30" z="0.30" />
             </transform>
-            <models>
-                <model file="sphere_1_10_10.3d" />
-            </models>
+            <group>
+                <transform>
+                    <rotate time="5" x="0" y="1" z="0" />
+                    <scale x="0.30" y="0.30" z="0.30" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color r="255" g="99" b="71" />
+                    </model>
+                </models>
+            </group>
         </group>
 
         <!-- ==================== Venus ==================== -->
         <group>
             <transform>
-                <rotate angle="115" x="0" y="1" z="0" />
+                <rotate time="12" x="0" y="1" z="0" />
                 <translate x="10.5" y="0" z="0" />
-                <scale x="0.70" y="0.70" z="0.70" />
             </transform>
-            <models>
-                <model file="sphere_1_10_10.3d" />
-            </models>
+            <group>
+                <transform>
+                    <rotate time="7" x="0" y="1" z="0" />
+                    <scale x="0.70" y="0.70" z="0.70" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color r="255" g="165" b="0" />
+                    </model>
+                </models>
+            </group>
         </group>
 
         <!-- ==================== Earth + Moon ==================== -->
         <group>
             <transform>
-                <rotate angle="170" x="0" y="1" z="0" />
+                <rotate time="15" x="0" y="1" z="0" />
                 <translate x="14" y="0" z="0" />
             </transform>
+            <!-- Earth -->
             <group>
                 <transform>
+                    <rotate time="3" x="0" y="1" z="0" />
                     <scale x="0.80" y="0.80" z="0.80" />
                 </transform>
                 <models>
-                    <model file="sphere_1_10_10.3d" />
+                    <model file="sphere_1_10_10.3d">
+                        <color r="65" g="105" b="225" />
+                    </model>
                 </models>
             </group>
+            <!-- Moon -->
             <group>
                 <transform>
-                    <rotate angle="40" x="0" y="1" z="0" />
+                    <rotate time="4" x="0" y="1" z="0" />
                     <translate x="2.0" y="0" z="0" />
-                    <scale x="0.22" y="0.22" z="0.22" />
                 </transform>
-                <models>
-                    <model file="sphere_1_8_8.3d" />
-                </models>
+                <group>
+                    <transform>
+                        <rotate time="4" x="0" y="1" z="0" />
+                        <scale x="0.22" y="0.22" z="0.22" />
+                    </transform>
+                    <models>
+                        <model file="sphere_1_8_8.3d">
+                            <color r="118" g="118" b="118" />
+                        </model>
+                    </models>
+                </group>
             </group>
         </group>
 
         <!-- ==================== Mars + Phobos + Deimos ==================== -->
         <group>
             <transform>
-                <rotate angle="225" x="0" y="1" z="0" />
+                <rotate time="20" x="0" y="1" z="0" />
                 <translate x="17" y="0" z="0" />
             </transform>
+            <!-- Mars -->
             <group>
                 <transform>
+                    <rotate time="3" x="0" y="1" z="0" />
                     <scale x="0.45" y="0.45" z="0.45" />
                 </transform>
                 <models>
-                    <model file="sphere_1_10_10.3d" />
+                    <model file="sphere_1_10_10.3d">
+                        <color r="178" g="34" b="34" />
+                    </model>
                 </models>
             </group>
+            <!-- Phobos -->
             <group>
                 <transform>
-                    <rotate angle="30" x="0" y="1" z="0" />
+                    <rotate time="2" x="0" y="1" z="0" />
                     <translate x="1.4" y="0" z="0" />
                     <scale x="0.08" y="0.08" z="0.08" />
                 </transform>
                 <models>
-                    <model file="sphere_1_8_8.3d" />
+                    <model file="sphere_1_8_8.3d">
+                        <color r="150" g="140" b="130" />
+                    </model>
                 </models>
             </group>
+            <!-- Deimos -->
             <group>
                 <transform>
-                    <rotate angle="150" x="0" y="1" z="0" />
+                    <rotate time="5" x="0" y="1" z="0" />
                     <translate x="2.0" y="0" z="0" />
                     <scale x="0.06" y="0.06" z="0.06" />
                 </transform>
                 <models>
-                    <model file="sphere_1_8_8.3d" />
+                    <model file="sphere_1_8_8.3d">
+                        <color r="140" g="130" b="120" />
+                    </model>
                 </models>
             </group>
-        </group>
-
-        <!-- ==================== Asteroid Belt ==================== -->
-        <group>
-            <transform>
-                <rotate angle="3" x="1" y="0" z="0" />
-            </transform>
-
-            <group><transform><rotate angle="0" x="0" y="1" z="0" /><translate x="19.8" y="0" z="0" /><scale x="0.12" y="0.12" z="0.12" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="5" x="0" y="1" z="0" /><translate x="21.3" y="0.4" z="0" /><scale x="0.08" y="0.08" z="0.08" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="10" x="0" y="1" z="0" /><translate x="20.4" y="-0.3" z="0" /><scale x="0.16" y="0.16" z="0.16" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="15" x="0" y="1" z="0" /><translate x="21.7" y="0.6" z="0" /><scale x="0.10" y="0.10" z="0.10" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="20" x="0" y="1" z="0" /><translate x="20.3" y="-0.5" z="0" /><scale x="0.14" y="0.14" z="0.14" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="25" x="0" y="1" z="0" /><translate x="21.0" y="0.2" z="0" /><scale x="0.07" y="0.07" z="0.07" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="30" x="0" y="1" z="0" /><translate x="20.1" y="-0.4" z="0" /><scale x="0.15" y="0.15" z="0.15" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="35" x="0" y="1" z="0" /><translate x="21.6" y="0.5" z="0" /><scale x="0.09" y="0.09" z="0.09" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="40" x="0" y="1" z="0" /><translate x="20.7" y="-0.1" z="0" /><scale x="0.13" y="0.13" z="0.13" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="45" x="0" y="1" z="0" /><translate x="21.5" y="0.3" z="0" /><scale x="0.11" y="0.11" z="0.11" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="50" x="0" y="1" z="0" /><translate x="19.9" y="-0.6" z="0" /><scale x="0.17" y="0.17" z="0.17" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="55" x="0" y="1" z="0" /><translate x="20.9" y="0.1" z="0" /><scale x="0.06" y="0.06" z="0.06" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="60" x="0" y="1" z="0" /><translate x="19.8" y="0" z="0" /><scale x="0.12" y="0.12" z="0.12" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="65" x="0" y="1" z="0" /><translate x="21.3" y="0.4" z="0" /><scale x="0.08" y="0.08" z="0.08" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="70" x="0" y="1" z="0" /><translate x="20.4" y="-0.3" z="0" /><scale x="0.16" y="0.16" z="0.16" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="75" x="0" y="1" z="0" /><translate x="21.7" y="0.6" z="0" /><scale x="0.10" y="0.10" z="0.10" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="80" x="0" y="1" z="0" /><translate x="20.3" y="-0.5" z="0" /><scale x="0.14" y="0.14" z="0.14" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="85" x="0" y="1" z="0" /><translate x="21.0" y="0.2" z="0" /><scale x="0.07" y="0.07" z="0.07" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="90" x="0" y="1" z="0" /><translate x="20.1" y="-0.4" z="0" /><scale x="0.15" y="0.15" z="0.15" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="95" x="0" y="1" z="0" /><translate x="21.6" y="0.5" z="0" /><scale x="0.09" y="0.09" z="0.09" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="100" x="0" y="1" z="0" /><translate x="20.7" y="-0.1" z="0" /><scale x="0.13" y="0.13" z="0.13" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="105" x="0" y="1" z="0" /><translate x="21.5" y="0.3" z="0" /><scale x="0.11" y="0.11" z="0.11" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="110" x="0" y="1" z="0" /><translate x="19.9" y="-0.6" z="0" /><scale x="0.17" y="0.17" z="0.17" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="115" x="0" y="1" z="0" /><translate x="20.9" y="0.1" z="0" /><scale x="0.06" y="0.06" z="0.06" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="120" x="0" y="1" z="0" /><translate x="19.8" y="0" z="0" /><scale x="0.12" y="0.12" z="0.12" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="125" x="0" y="1" z="0" /><translate x="21.3" y="0.4" z="0" /><scale x="0.08" y="0.08" z="0.08" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="130" x="0" y="1" z="0" /><translate x="20.4" y="-0.3" z="0" /><scale x="0.16" y="0.16" z="0.16" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="135" x="0" y="1" z="0" /><translate x="21.7" y="0.6" z="0" /><scale x="0.10" y="0.10" z="0.10" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="140" x="0" y="1" z="0" /><translate x="20.3" y="-0.5" z="0" /><scale x="0.14" y="0.14" z="0.14" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="145" x="0" y="1" z="0" /><translate x="21.0" y="0.2" z="0" /><scale x="0.07" y="0.07" z="0.07" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="150" x="0" y="1" z="0" /><translate x="20.1" y="-0.4" z="0" /><scale x="0.15" y="0.15" z="0.15" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="155" x="0" y="1" z="0" /><translate x="21.6" y="0.5" z="0" /><scale x="0.09" y="0.09" z="0.09" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="160" x="0" y="1" z="0" /><translate x="20.7" y="-0.1" z="0" /><scale x="0.13" y="0.13" z="0.13" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="165" x="0" y="1" z="0" /><translate x="21.5" y="0.3" z="0" /><scale x="0.11" y="0.11" z="0.11" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="170" x="0" y="1" z="0" /><translate x="19.9" y="-0.6" z="0" /><scale x="0.17" y="0.17" z="0.17" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="175" x="0" y="1" z="0" /><translate x="20.9" y="0.1" z="0" /><scale x="0.06" y="0.06" z="0.06" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="180" x="0" y="1" z="0" /><translate x="19.8" y="0" z="0" /><scale x="0.12" y="0.12" z="0.12" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="185" x="0" y="1" z="0" /><translate x="21.3" y="0.4" z="0" /><scale x="0.08" y="0.08" z="0.08" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="190" x="0" y="1" z="0" /><translate x="20.4" y="-0.3" z="0" /><scale x="0.16" y="0.16" z="0.16" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="195" x="0" y="1" z="0" /><translate x="21.7" y="0.6" z="0" /><scale x="0.10" y="0.10" z="0.10" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="200" x="0" y="1" z="0" /><translate x="20.3" y="-0.5" z="0" /><scale x="0.14" y="0.14" z="0.14" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="205" x="0" y="1" z="0" /><translate x="21.0" y="0.2" z="0" /><scale x="0.07" y="0.07" z="0.07" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="210" x="0" y="1" z="0" /><translate x="20.1" y="-0.4" z="0" /><scale x="0.15" y="0.15" z="0.15" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="215" x="0" y="1" z="0" /><translate x="21.6" y="0.5" z="0" /><scale x="0.09" y="0.09" z="0.09" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="220" x="0" y="1" z="0" /><translate x="20.7" y="-0.1" z="0" /><scale x="0.13" y="0.13" z="0.13" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="225" x="0" y="1" z="0" /><translate x="21.5" y="0.3" z="0" /><scale x="0.11" y="0.11" z="0.11" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="230" x="0" y="1" z="0" /><translate x="19.9" y="-0.6" z="0" /><scale x="0.17" y="0.17" z="0.17" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="235" x="0" y="1" z="0" /><translate x="20.9" y="0.1" z="0" /><scale x="0.06" y="0.06" z="0.06" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="240" x="0" y="1" z="0" /><translate x="19.8" y="0" z="0" /><scale x="0.12" y="0.12" z="0.12" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="245" x="0" y="1" z="0" /><translate x="21.3" y="0.4" z="0" /><scale x="0.08" y="0.08" z="0.08" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="250" x="0" y="1" z="0" /><translate x="20.4" y="-0.3" z="0" /><scale x="0.16" y="0.16" z="0.16" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="255" x="0" y="1" z="0" /><translate x="21.7" y="0.6" z="0" /><scale x="0.10" y="0.10" z="0.10" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="260" x="0" y="1" z="0" /><translate x="20.3" y="-0.5" z="0" /><scale x="0.14" y="0.14" z="0.14" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="265" x="0" y="1" z="0" /><translate x="21.0" y="0.2" z="0" /><scale x="0.07" y="0.07" z="0.07" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="270" x="0" y="1" z="0" /><translate x="20.1" y="-0.4" z="0" /><scale x="0.15" y="0.15" z="0.15" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="275" x="0" y="1" z="0" /><translate x="21.6" y="0.5" z="0" /><scale x="0.09" y="0.09" z="0.09" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="280" x="0" y="1" z="0" /><translate x="20.7" y="-0.1" z="0" /><scale x="0.13" y="0.13" z="0.13" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="285" x="0" y="1" z="0" /><translate x="21.5" y="0.3" z="0" /><scale x="0.11" y="0.11" z="0.11" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="290" x="0" y="1" z="0" /><translate x="19.9" y="-0.6" z="0" /><scale x="0.17" y="0.17" z="0.17" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="295" x="0" y="1" z="0" /><translate x="20.9" y="0.1" z="0" /><scale x="0.06" y="0.06" z="0.06" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="300" x="0" y="1" z="0" /><translate x="19.8" y="0" z="0" /><scale x="0.12" y="0.12" z="0.12" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="305" x="0" y="1" z="0" /><translate x="21.3" y="0.4" z="0" /><scale x="0.08" y="0.08" z="0.08" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="310" x="0" y="1" z="0" /><translate x="20.4" y="-0.3" z="0" /><scale x="0.16" y="0.16" z="0.16" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="315" x="0" y="1" z="0" /><translate x="21.7" y="0.6" z="0" /><scale x="0.10" y="0.10" z="0.10" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="320" x="0" y="1" z="0" /><translate x="20.3" y="-0.5" z="0" /><scale x="0.14" y="0.14" z="0.14" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="325" x="0" y="1" z="0" /><translate x="21.0" y="0.2" z="0" /><scale x="0.07" y="0.07" z="0.07" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="330" x="0" y="1" z="0" /><translate x="20.1" y="-0.4" z="0" /><scale x="0.15" y="0.15" z="0.15" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="335" x="0" y="1" z="0" /><translate x="21.6" y="0.5" z="0" /><scale x="0.09" y="0.09" z="0.09" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="340" x="0" y="1" z="0" /><translate x="20.7" y="-0.1" z="0" /><scale x="0.13" y="0.13" z="0.13" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="345" x="0" y="1" z="0" /><translate x="21.5" y="0.3" z="0" /><scale x="0.11" y="0.11" z="0.11" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-            <group><transform><rotate angle="350" x="0" y="1" z="0" /><translate x="19.9" y="-0.6" z="0" /><scale x="0.17" y="0.17" z="0.17" /></transform><models><model file="box_1_1.3d" /></models></group>
-            <group><transform><rotate angle="355" x="0" y="1" z="0" /><translate x="20.9" y="0.1" z="0" /><scale x="0.06" y="0.06" z="0.06" /></transform><models><model file="sphere_1_8_8.3d" /></models></group>
-
         </group>
 
         <!-- ==================== Jupiter + Moons ==================== -->
         <group>
             <transform>
-                <rotate angle="280" x="0" y="1" z="0" />
+                <rotate time="35" x="0" y="1" z="0" />
                 <translate x="27" y="0" z="0" />
             </transform>
+            <!-- Jupiter -->
             <group>
                 <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
                     <scale x="2.00" y="2.00" z="2.00" />
                 </transform>
                 <models>
-                    <model file="sphere_1_10_10.3d" />
+                    <model file="sphere_1_10_10.3d">
+                        <color r="139" g="69" b="19" />
+                    </model>
                 </models>
             </group>
+            <!-- Io -->
             <group>
                 <transform>
-                    <rotate angle="15" x="0" y="1" z="0" />
+                    <rotate time="3" x="0" y="1" z="0" />
                     <translate x="3.8" y="0" z="0" />
                     <scale x="0.20" y="0.20" z="0.20" />
                 </transform>
                 <models>
-                    <model file="sphere_1_8_8.3d" />
+                    <model file="sphere_1_8_8.3d">
+                        <color r="200" g="180" b="100" />
+                    </model>
                 </models>
             </group>
+            <!-- Europa -->
             <group>
                 <transform>
-                    <rotate angle="95" x="0" y="1" z="0" />
+                    <rotate time="5" x="0" y="1" z="0" />
                     <translate x="4.6" y="0" z="0" />
                     <scale x="0.18" y="0.18" z="0.18" />
                 </transform>
                 <models>
-                    <model file="sphere_1_8_8.3d" />
+                    <model file="sphere_1_8_8.3d">
+                        <color r="180" g="180" b="200" />
+                    </model>
                 </models>
             </group>
+            <!-- Ganymede -->
             <group>
                 <transform>
-                    <rotate angle="170" x="0" y="1" z="0" />
+                    <rotate time="7" x="0" y="1" z="0" />
                     <translate x="5.6" y="0" z="0" />
                     <scale x="0.25" y="0.25" z="0.25" />
                 </transform>
                 <models>
-                    <model file="sphere_1_8_8.3d" />
+                    <model file="sphere_1_8_8.3d">
+                        <color r="130" g="130" b="120" />
+                    </model>
                 </models>
             </group>
+            <!-- Callisto -->
             <group>
                 <transform>
-                    <rotate angle="250" x="0" y="1" z="0" />
+                    <rotate time="10" x="0" y="1" z="0" />
                     <translate x="6.8" y="0" z="0" />
                     <scale x="0.24" y="0.24" z="0.24" />
                 </transform>
                 <models>
-                    <model file="sphere_1_8_8.3d" />
+                    <model file="sphere_1_8_8.3d">
+                        <color r="100" g="100" b="100" />
+                    </model>
                 </models>
             </group>
         </group>
@@ -246,34 +220,44 @@
         <!-- ==================== Saturn + Ring + Titan ==================== -->
         <group>
             <transform>
-                <rotate angle="335" x="0" y="1" z="0" />
-                <translate x="30" y="0" z="0" />
+                <rotate time="50" x="0" y="1" z="0" />
+                <translate x="36" y="0" z="0" />
             </transform>
+            <!-- Saturn -->
             <group>
                 <transform>
+                    <rotate time="3" x="0" y="1" z="0" />
                     <scale x="1.70" y="1.70" z="1.70" />
                 </transform>
                 <models>
-                    <model file="sphere_1_10_10.3d" />
+                    <model file="sphere_1_10_10.3d">
+                        <color r="238" g="200" b="140" />
+                    </model>
                 </models>
             </group>
+            <!-- Ring -->
             <group>
                 <transform>
                     <rotate angle="20" x="1" y="0" z="0" />
                     <scale x="3.4" y="0.04" z="3.4" />
                 </transform>
                 <models>
-                    <model file="sphere_1_10_10.3d" />
+                    <model file="sphere_1_10_10.3d">
+                        <color r="200" g="180" b="160" />
+                    </model>
                 </models>
             </group>
+            <!-- Titan -->
             <group>
                 <transform>
-                    <rotate angle="70" x="0" y="1" z="0" />
+                    <rotate time="6" x="0" y="1" z="0" />
                     <translate x="4.8" y="0" z="0" />
                     <scale x="0.28" y="0.28" z="0.28" />
                 </transform>
                 <models>
-                    <model file="sphere_1_8_8.3d" />
+                    <model file="sphere_1_8_8.3d">
+                        <color r="220" g="150" b="50" />
+                    </model>
                 </models>
             </group>
         </group>
@@ -281,24 +265,60 @@
         <!-- ==================== Uranus ==================== -->
         <group>
             <transform>
-                <rotate angle="30" x="0" y="1" z="0" />
-                <translate x="35" y="0" z="0" />
-                <scale x="1.30" y="1.30" z="1.30" />
+                <rotate time="60" x="0" y="1" z="0" />
+                <translate x="43" y="0" z="0" />
             </transform>
-            <models>
-                <model file="sphere_1_10_10.3d" />
-            </models>
+            <group>
+                <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
+                    <scale x="1.30" y="1.30" z="1.30" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color r="173" g="216" b="230" />
+                    </model>
+                </models>
+            </group>
         </group>
 
         <!-- ==================== Neptune ==================== -->
         <group>
             <transform>
-                <rotate angle="78" x="0" y="1" z="0" />
-                <translate x="40" y="0" z="0" />
-                <scale x="1.25" y="1.25" z="1.25" />
+                <rotate time="70" x="0" y="1" z="0" />
+                <translate x="48" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
+                    <scale x="1.25" y="1.25" z="1.25" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color r="0" g="0" b="139" />
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- ==================== Comet (Teapot on Catmull-Rom) ==================== -->
+        <group>
+            <transform>
+                <translate time="10" align="True" >
+                    <point x="-20" y="2" z="-20" />
+                    <point x="20" y="5" z="-10" />
+                    <point x="30" y="10" z="10" />
+                    <point x="20" y="-3" z="20" />
+                    <point x="-20" y="2" z="20" />
+                    <point x="-30" y="5" z="10" />
+                    <point x="-30" y="2" z="-10" />
+                    <point x="-25" y="-3" z="-15" />
+                </translate>
+                <scale x="0.8" y="0.8" z="0.8" />
             </transform>
             <models>
-                <model file="sphere_1_10_10.3d" />
+                <model file="teapot.3d">
+                    <color r="0" g="255" b="255" />
+                </model>
             </models>
         </group>
 
