@@ -124,8 +124,6 @@ $ .\engine.exe ..\..\..\..\src\scenes\solar_system.xml
 ## ✍️ Developed by
 
 - [Jorge Rafael Machado Fernandes](https://github.com/rafafernandes888) (A104168)
-- [Diogo Teixeira Fernandes](https://github.com/diogo7fernandes) (A104260)
-- [Filipe Teixeira Viana](https://github.com/ftviana) (A104361)
 
 ## Note
 
