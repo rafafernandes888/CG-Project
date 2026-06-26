@@ -16,8 +16,11 @@
 #include <vector>
 
 #include "draw.hpp"
+#include "Configuration.hpp"
 
 extern int showCurves;
+extern int showNormals;
+extern Configuration c;
 
 // ===================== Catmull-Rom curve =====================
 
@@ -36,12 +39,10 @@ static void getCatmullRomPoint(float t, Point p0, Point p1, Point p2, Point p3,
     float T[4]  = { ttt, tt, t, 1.0f };
     float dT[4] = { 3*tt, 2*t, 1.0f, 0.0f };
 
-    // P matrix (each row is a coordinate axis)
     float px[4] = { p0.x, p1.x, p2.x, p3.x };
     float py[4] = { p0.y, p1.y, p2.y, p3.y };
     float pz[4] = { p0.z, p1.z, p2.z, p3.z };
 
-    // A = M * P for each axis
     float ax[4], ay[4], az[4];
     for (int i = 0; i < 4; i++) {
         ax[i] = ay[i] = az[i] = 0;
@@ -52,7 +53,6 @@ static void getCatmullRomPoint(float t, Point p0, Point p1, Point p2, Point p3,
         }
     }
 
-    // pos = T * A, deriv = dT * A
     pos.x = pos.y = pos.z = 0;
     deriv.x = deriv.y = deriv.z = 0;
     for (int i = 0; i < 4; i++) {
@@ -82,8 +82,8 @@ static void getGlobalCatmullRomPoint(float gt, const std::vector<Point>& pts,
                        pts[indices[2]], pts[indices[3]], pos, deriv);
 }
 
-// Draw the Catmull-Rom curve as a line loop (debug visualization)
 static void renderCatmullRomCurve(const std::vector<Point>& pts) {
+    glDisable(GL_LIGHTING);
     glBegin(GL_LINE_LOOP);
     glColor3f(0.5f, 0.5f, 0.5f);
     float step = 1.0f / 100.0f;
@@ -93,9 +93,9 @@ static void renderCatmullRomCurve(const std::vector<Point>& pts) {
         glVertex3f(pos.x, pos.y, pos.z);
     }
     glEnd();
+    if (!c.lights.empty()) glEnable(GL_LIGHTING);
 }
 
-// Normalize a vector
 static void normalize(float* v) {
     float len = sqrtf(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
     if (len > 0.0001f) {
@@ -103,17 +103,63 @@ static void normalize(float* v) {
     }
 }
 
-// Cross product: res = a x b
 static void cross(float* a, float* b, float* res) {
     res[0] = a[1]*b[2] - a[2]*b[1];
     res[1] = a[2]*b[0] - a[0]*b[2];
     res[2] = a[0]*b[1] - a[1]*b[0];
 }
 
+// ===================== Setup lights =====================
+
+void setupLights(const std::vector<Light>& lights) {
+    if (lights.empty()) {
+        glDisable(GL_LIGHTING);
+        return;
+    }
+
+    glEnable(GL_LIGHTING);
+
+    for (size_t i = 0; i < lights.size() && i < 8; i++) {
+        GLenum lightId = GL_LIGHT0 + (GLenum)i;
+        glEnable(lightId);
+
+        const Light& l = lights[i];
+
+        float white[4] = {1, 1, 1, 1};
+        glLightfv(lightId, GL_DIFFUSE,  white);
+        glLightfv(lightId, GL_SPECULAR, white);
+
+        switch (l.type) {
+            case LIGHT_POINT: {
+                float pos[4] = { l.posX, l.posY, l.posZ, 1.0f };
+                glLightfv(lightId, GL_POSITION, pos);
+                glLightf(lightId, GL_SPOT_CUTOFF, 180.0f);
+                glLightf(lightId, GL_CONSTANT_ATTENUATION, 1.0f);
+                glLightf(lightId, GL_LINEAR_ATTENUATION, 0.0f);
+                glLightf(lightId, GL_QUADRATIC_ATTENUATION, 0.0f);
+                break;
+            }
+            case LIGHT_DIRECTIONAL: {
+                float dir[4] = { l.dirX, l.dirY, l.dirZ, 0.0f };
+                glLightfv(lightId, GL_POSITION, dir);
+                break;
+            }
+            case LIGHT_SPOTLIGHT: {
+                float pos[4] = { l.posX, l.posY, l.posZ, 1.0f };
+                float dir[3] = { l.dirX, l.dirY, l.dirZ };
+                glLightfv(lightId, GL_POSITION, pos);
+                glLightfv(lightId, GL_SPOT_DIRECTION, dir);
+                glLightf(lightId, GL_SPOT_CUTOFF, l.cutoff);
+                break;
+            }
+        }
+    }
+}
+
 // ===================== Apply transforms =====================
 
 static void applyTransforms(Group& group) {
-    float elapsed = glutGet(GLUT_ELAPSED_TIME) / 1000.0f; // seconds
+    float elapsed = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
 
     for (auto& t : group.transforms) {
         switch (t.type) {
@@ -134,16 +180,12 @@ static void applyTransforms(Group& group) {
                 if (cr.align) {
                     float X[3] = { deriv.x, deriv.y, deriv.z };
                     normalize(X);
-
                     float Y[3] = { cr.prevY.x, cr.prevY.y, cr.prevY.z };
-
                     float Z[3];
                     cross(X, Y, Z);
                     normalize(Z);
-
                     cross(Z, X, Y);
                     normalize(Y);
-
                     cr.prevY = Point(Y[0], Y[1], Y[2]);
 
                     float m[16] = {
@@ -174,17 +216,85 @@ static void applyTransforms(Group& group) {
     }
 }
 
-// ===================== Draw models using VBOs =====================
+// ===================== Draw models =====================
 
 static void drawModels(const std::vector<ModelData>& models) {
     for (const auto& m : models) {
-        if (m.vboId == 0 || m.vertexCount == 0) continue;
+        if (m.vboPositions == 0 || m.vertexCount == 0) continue;
 
-        glColor3f(m.r, m.g, m.b); // Apply model specific color
-        glBindBuffer(GL_ARRAY_BUFFER, m.vboId);
+        // Apply material
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,  m.material.diffuse);
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,  m.material.ambient);
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m.material.specular);
+        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, m.material.emissive);
+        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m.material.shininess);
+
+        // Bind texture if available
+        if (m.textureId != 0) {
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, m.textureId);
+            glBindBuffer(GL_ARRAY_BUFFER, m.vboTexCoords);
+            glTexCoordPointer(2, GL_FLOAT, 0, 0);
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        } else {
+            glDisable(GL_TEXTURE_2D);
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        }
+
+        // Bind normals
+        glBindBuffer(GL_ARRAY_BUFFER, m.vboNormals);
+        glNormalPointer(GL_FLOAT, 0, 0);
+
+        // Bind positions
+        glBindBuffer(GL_ARRAY_BUFFER, m.vboPositions);
         glVertexPointer(3, GL_FLOAT, 0, 0);
+
+        // Draw
         glDrawArrays(GL_TRIANGLES, 0, m.vertexCount);
+
+        // Cleanup texture state
+        if (m.textureId != 0) {
+            glDisable(GL_TEXTURE_2D);
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        }
     }
+}
+
+// ===================== Draw normals as red lines =====================
+
+static void drawNormalsForModels(const std::vector<ModelData>& models) {
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 0.0f, 0.0f);
+
+    for (const auto& m : models) {
+        if (m.vboPositions == 0 || m.vboNormals == 0 || m.vertexCount == 0) continue;
+
+        glBindBuffer(GL_ARRAY_BUFFER, m.vboPositions);
+        float* pos = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+        if (!pos) continue;
+
+        glBindBuffer(GL_ARRAY_BUFFER, m.vboNormals);
+        float* nrm = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+        if (!nrm) { glBindBuffer(GL_ARRAY_BUFFER, m.vboPositions); glUnmapBuffer(GL_ARRAY_BUFFER); continue; }
+
+        float scale = 0.2f;
+        glBegin(GL_LINES);
+        for (int i = 0; i < m.vertexCount; i++) {
+            float px = pos[i*3], py = pos[i*3+1], pz = pos[i*3+2];
+            float nx = nrm[i*3], ny = nrm[i*3+1], nz = nrm[i*3+2];
+            glVertex3f(px, py, pz);
+            glVertex3f(px + nx*scale, py + ny*scale, pz + nz*scale);
+        }
+        glEnd();
+
+        glBindBuffer(GL_ARRAY_BUFFER, m.vboNormals);
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+        glBindBuffer(GL_ARRAY_BUFFER, m.vboPositions);
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+    }
+
+    if (!c.lights.empty()) glEnable(GL_LIGHTING);
 }
 
 // ===================== Draw group recursively =====================
@@ -193,8 +303,8 @@ void drawGroup(Group& group) {
     glPushMatrix();
 
     applyTransforms(group);
-
     drawModels(group.models);
+    if (showNormals) drawNormalsForModels(group.models);
 
     for (auto& child : group.subgroups) {
         drawGroup(child);

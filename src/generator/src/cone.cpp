@@ -6,67 +6,75 @@
 
 #include "../../shared/include/utils.hpp"
 
+std::vector<Vertex> coneTriangles(float radius, float height, int slices, int stacks) {
+    std::vector<Vertex> verts;
 
-std::vector<Point> coneTriangles(const float radius, const float height,
-    const size_t slices, const size_t stacks) {
-    std::vector<Point> vertex;
-
-    const float alfa = static_cast<float>(2 * M_PI / slices);
+    const float alfa = 2.0f * (float)M_PI / slices;
     const float stackHeight = height / stacks;
+    const float slopeLen = sqrtf(height * height + radius * radius);
 
-    const auto base_middle = Point{ 0, 0, 0 };
+    for (int slice = 0; slice < slices; ++slice) {
+        float theta1 = slice * alfa;
+        float theta2 = (slice + 1) * alfa;
 
-    for (size_t slice = 0; slice < slices; ++slice) {
-        for (size_t stack = 0; stack < stacks; ++stack) {
-            const float cRadius = radius - stack * radius / stacks;
-            const float nRadius = radius - (stack + 1) * radius / stacks;
+        // Lateral normal: (h*sin(theta), r, h*cos(theta)) / slopeLen
+        float nx1 = height * sinf(theta1) / slopeLen;
+        float ny  = radius / slopeLen;
+        float nz1 = height * cosf(theta1) / slopeLen;
+        float nx2 = height * sinf(theta2) / slopeLen;
+        float nz2 = height * cosf(theta2) / slopeLen;
 
-            const Point bottom_left =
-                Point(cRadius * sinf(slice * alfa), stack * stackHeight,
-                    cRadius * cosf(slice * alfa));
-            const Point bottom_right =
-                Point(cRadius * sinf((slice + 1) * alfa), stack * stackHeight,
-                    cRadius * cosf((slice + 1) * alfa));
-            const Point top_left =
-                Point(nRadius * sinf(slice * alfa), (stack + 1) * stackHeight,
-                    nRadius * cosf(slice * alfa));
-            const Point top_right =
-                Point(nRadius * sinf((slice + 1) * alfa), (stack + 1) * stackHeight,
-                    nRadius * cosf((slice + 1) * alfa));
+        float u1 = (float)slice / slices;
+        float u2 = (float)(slice + 1) / slices;
 
-            vertex.push_back(top_left);
-            vertex.push_back(bottom_left);
-            vertex.push_back(bottom_right);
+        for (int stack = 0; stack < stacks; ++stack) {
+            float cR = radius - stack * radius / stacks;
+            float nR = radius - (stack + 1) * radius / stacks;
+            float y_lo = stack * stackHeight;
+            float y_hi = (stack + 1) * stackHeight;
 
-            vertex.push_back(top_left);
-            vertex.push_back(bottom_right);
-            vertex.push_back(top_right);
+            float v_lo = (float)stack / stacks;
+            float v_hi = (float)(stack + 1) / stacks;
+
+            Vertex bl(cR*sinf(theta1), y_lo, cR*cosf(theta1), nx1,ny,nz1, u1,v_lo);
+            Vertex br(cR*sinf(theta2), y_lo, cR*cosf(theta2), nx2,ny,nz2, u2,v_lo);
+            Vertex tl(nR*sinf(theta1), y_hi, nR*cosf(theta1), nx1,ny,nz1, u1,v_hi);
+            Vertex tr(nR*sinf(theta2), y_hi, nR*cosf(theta2), nx2,ny,nz2, u2,v_hi);
+
+            verts.push_back(tl);
+            verts.push_back(bl);
+            verts.push_back(br);
+
+            verts.push_back(tl);
+            verts.push_back(br);
+            verts.push_back(tr);
         }
 
-        const Point base_bottom_left =
-            Point(radius * sinf(static_cast<float>(slice) * alfa), 0,
-                radius * cosf(static_cast<float>(slice) * alfa));
-        const Point base_bottom_right =
-            Point(radius * sinf(static_cast<float>(slice + 1) * alfa), 0,
-                radius * cosf(static_cast<float>(slice + 1) * alfa));
+        // Base
+        float bx1 = radius * sinf(theta1);
+        float bz1 = radius * cosf(theta1);
+        float bx2 = radius * sinf(theta2);
+        float bz2 = radius * cosf(theta2);
 
-        vertex.push_back(base_middle);
-        vertex.push_back(base_bottom_right);
-        vertex.push_back(base_bottom_left);
+        float bu1 = 0.5f + 0.5f * sinf(theta1);
+        float bv1 = 0.5f + 0.5f * cosf(theta1);
+        float bu2 = 0.5f + 0.5f * sinf(theta2);
+        float bv2 = 0.5f + 0.5f * cosf(theta2);
+
+        verts.push_back(Vertex(0,0,0,       0,-1,0,  0.5f,0.5f));
+        verts.push_back(Vertex(bx2,0,bz2,   0,-1,0,  bu2,bv2));
+        verts.push_back(Vertex(bx1,0,bz1,   0,-1,0,  bu1,bv1));
     }
 
-    return vertex;
+    return verts;
 }
 
-bool generateCone(float radius, float height, int slices, int stacks,
-    const char* filepath) {
-    std::vector<Point> triangles = coneTriangles(radius, height, slices, stacks);
-
+bool generateCone(float radius, float height, int slices, int stacks, const char* filepath) {
+    std::vector<Vertex> triangles = coneTriangles(radius, height, slices, stacks);
     if (triangles.empty()) {
         std::cerr << "Error: Empty vector of triangles.\n";
         return false;
     }
     saveToFile(triangles, filepath);
-
     return true;
 }

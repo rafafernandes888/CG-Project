@@ -23,14 +23,13 @@ if(NOT OPENGL_FOUND)
 endif()
 
 if(WIN32)
-    message(STATUS "Configurando GLUT e GLEW a partir da pasta 'toolkits'")
+    message(STATUS "Configurando GLUT, GLEW e DevIL a partir da pasta 'toolkits'")
     set(TOOLKITS_FOLDER "${CMAKE_SOURCE_DIR}/toolkits")
 
     # GLUT
     if(NOT EXISTS "${TOOLKITS_FOLDER}/glut/GL/glut.h" OR NOT EXISTS "${TOOLKITS_FOLDER}/glut/glut32.lib")
         message(FATAL_ERROR "GLUT not found!")
     endif()
-
     include_directories(${TOOLKITS_FOLDER}/glut)
     link_directories(${TOOLKITS_FOLDER}/glut)
 
@@ -38,23 +37,29 @@ if(WIN32)
     if(NOT EXISTS "${TOOLKITS_FOLDER}/glew/GL/glew.h" OR NOT EXISTS "${TOOLKITS_FOLDER}/glew/glew32.lib")
         message(FATAL_ERROR "GLEW not found in toolkits/glew!")
     endif()
-
     include_directories(${TOOLKITS_FOLDER}/glew)
     link_directories(${TOOLKITS_FOLDER}/glew)
+
+    # DevIL
+    if(NOT EXISTS "${TOOLKITS_FOLDER}/devil/IL/il.h" OR NOT EXISTS "${TOOLKITS_FOLDER}/devil/DevIL.lib")
+        message(FATAL_ERROR "DevIL not found in toolkits/devil!")
+    endif()
+    include_directories(${TOOLKITS_FOLDER}/devil)
+    link_directories(${TOOLKITS_FOLDER}/devil)
 
     target_link_libraries(${PROJECT_NAME}
         ${OPENGL_LIBRARIES}
         ${TOOLKITS_FOLDER}/glut/glut32.lib
         ${TOOLKITS_FOLDER}/glew/glew32.lib
+        ${TOOLKITS_FOLDER}/devil/DevIL.lib
     )
 
-    # copia as DLLs automaticamente após cada build
     if(EXISTS "${TOOLKITS_FOLDER}/glut/glut32.dll")
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${TOOLKITS_FOLDER}/glut/glut32.dll"
                 "$<TARGET_FILE_DIR:${PROJECT_NAME}>/glut32.dll"
-            COMMENT "A copiar glut32.dll para a pasta do executável"
+            COMMENT "A copiar glut32.dll para a pasta do executavel"
         )
     endif()
 
@@ -63,7 +68,16 @@ if(WIN32)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${TOOLKITS_FOLDER}/glew/glew32.dll"
                 "$<TARGET_FILE_DIR:${PROJECT_NAME}>/glew32.dll"
-            COMMENT "A copiar glew32.dll para a pasta do executável"
+            COMMENT "A copiar glew32.dll para a pasta do executavel"
+        )
+    endif()
+
+    if(EXISTS "${TOOLKITS_FOLDER}/devil/devil.dll")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${TOOLKITS_FOLDER}/devil/devil.dll"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/devil.dll"
+            COMMENT "A copiar devil.dll para a pasta do executavel"
         )
     endif()
 
@@ -77,10 +91,14 @@ else()
     link_directories(${GLUT_LIBRARY_DIRS})
     add_definitions(${GLUT_DEFINITIONS})
 
+    find_package(DevIL REQUIRED)
+    include_directories(${IL_INCLUDE_DIR})
+
     target_link_libraries(${PROJECT_NAME}
         ${OPENGL_LIBRARIES}
         ${GLUT_LIBRARIES}
         ${GLEW_LIBRARIES}
+        ${IL_LIBRARIES}
     )
 
     if(NOT GLUT_FOUND)

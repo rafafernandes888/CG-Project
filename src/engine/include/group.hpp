@@ -29,41 +29,75 @@ enum TransformType {
 };
 
 struct CatmullRomTranslate {
-    float time;          // seconds for full loop
-    bool align;          // align object to curve direction
-    std::vector<Point> points;  // control points
-    Point prevY;         // for align: previous Y axis (to keep continuity)
+    float time;
+    bool align;
+    std::vector<Point> points;
+    Point prevY;
 
     CatmullRomTranslate() : time(0), align(false), prevY(0, 1, 0) {}
 };
 
 struct Transform {
     TransformType type;
-
-    // Static translate / scale
     float x, y, z;
-
-    // Static rotate
     float angle;
-
-    // Time-based rotate
-    float rotTime; // seconds for 360 degrees
-
-    // Catmull-Rom translate
+    float rotTime;
     CatmullRomTranslate catmullRom;
 
     Transform() : type(TRANSFORM_SCALE), x(0), y(0), z(0), angle(0), rotTime(0) {}
 };
 
-// ---- Model with VBO ----
+// ---- Light ----
+
+enum LightType {
+    LIGHT_POINT,
+    LIGHT_DIRECTIONAL,
+    LIGHT_SPOTLIGHT
+};
+
+struct Light {
+    LightType type;
+    float posX, posY, posZ;
+    float dirX, dirY, dirZ;
+    float cutoff;
+
+    Light() : type(LIGHT_POINT),
+              posX(0), posY(0), posZ(0),
+              dirX(0), dirY(-1), dirZ(0),
+              cutoff(45.0f) {}
+};
+
+// ---- Material ----
+
+struct Material {
+    float diffuse[4];
+    float ambient[4];
+    float specular[4];
+    float emissive[4];
+    float shininess;
+
+    Material() : shininess(0.0f) {
+        diffuse[0] = 200/255.0f; diffuse[1] = 200/255.0f; diffuse[2] = 200/255.0f; diffuse[3] = 1.0f;
+        ambient[0] = 50/255.0f;  ambient[1] = 50/255.0f;  ambient[2] = 50/255.0f;  ambient[3] = 1.0f;
+        specular[0] = 0; specular[1] = 0; specular[2] = 0; specular[3] = 1.0f;
+        emissive[0] = 0; emissive[1] = 0; emissive[2] = 0; emissive[3] = 1.0f;
+    }
+};
+
+// ---- Model with VBOs ----
 
 struct ModelData {
     std::string filename;
-    GLuint vboId;
+    GLuint vboPositions;
+    GLuint vboNormals;
+    GLuint vboTexCoords;
     int vertexCount;
-    float r, g, b;
+    Material material;
+    std::string textureFile;
+    GLuint textureId;
 
-    ModelData() : vboId(0), vertexCount(0), r(1.0f), g(1.0f), b(1.0f) {}
+    ModelData() : vboPositions(0), vboNormals(0), vboTexCoords(0),
+                  vertexCount(0), textureId(0) {}
 };
 
 // ---- Group ----

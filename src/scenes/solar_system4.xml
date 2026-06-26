@@ -1,0 +1,604 @@
+<world>
+    <window width="1280" height="800" />
+
+    <camera>
+        <position x="5" y="12" z="30" />
+        <lookAt x="0" y="0" z="0" />
+        <up x="0" y="1" z="0" />
+        <projection fov="60" near="1" far="1000" />
+    </camera>
+
+    <lights>
+        <light type="point" posX="0" posY="0" posZ="0" />
+    </lights>
+
+    <group>
+
+        <!-- ==================== Sun ==================== -->
+        <group>
+            <transform>
+                <rotate time="25" x="0" y="1" z="0" />
+                <scale x="3.0" y="3.0" z="3.0" />
+            </transform>
+            <models>
+                <model file="sphere_1_20_20.3d">
+                    <texture file="sun.jpg" />
+                    <color>
+                        <diffuse R="255" G="255" B="200" />
+                        <ambient R="200" G="180" B="100" />
+                        <emissive R="255" G="200" B="50" />
+                        <shininess value="0" />
+                    </color>
+                </model>
+            </models>
+        </group>
+
+        <!-- ==================== Mercury ==================== -->
+        <group>
+            <transform>
+                <rotate time="8" x="0" y="1" z="0" />
+                <translate x="5.5" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="15" x="0" y="1" z="0" />
+                    <scale x="0.25" y="0.25" z="0.25" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="mercury.jpg" />
+                        <color>
+                            <diffuse R="200" G="200" B="200" />
+                            <ambient R="80" G="80" B="80" />
+                            <shininess value="5" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- ==================== Venus ==================== -->
+        <group>
+            <transform>
+                <rotate time="12" x="0" y="1" z="0" />
+                <translate x="7.5" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="18" x="0" y="1" z="0" />
+                    <scale x="0.45" y="0.45" z="0.45" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="venus.jpg" />
+                        <color>
+                            <diffuse R="200" G="200" B="200" />
+                            <ambient R="80" G="80" B="80" />
+                            <shininess value="5" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- ==================== Earth + Moon ==================== -->
+        <group>
+            <transform>
+                <rotate time="15" x="0" y="1" z="0" />
+                <translate x="10" y="0" z="0" />
+            </transform>
+            <!-- Earth (with stronger specular for ocean reflections) -->
+            <group>
+                <transform>
+                    <rotate time="5" x="0" y="1" z="0" />
+                    <scale x="0.50" y="0.50" z="0.50" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="earth.jpg" />
+                        <color>
+                            <diffuse R="200" G="200" B="200" />
+                            <ambient R="80" G="80" B="80" />
+                            <specular R="150" G="150" B="150" />
+                            <shininess value="40" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Moon -->
+            <group>
+                <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
+                    <translate x="1.3" y="0" z="0" />
+                </transform>
+                <group>
+                    <transform>
+                        <rotate time="4" x="0" y="1" z="0" />
+                        <scale x="0.15" y="0.15" z="0.15" />
+                    </transform>
+                    <models>
+                        <model file="sphere_1_20_20.3d">
+                            <texture file="moon.jpg" />
+                            <color>
+                                <diffuse R="200" G="200" B="200" />
+                                <ambient R="80" G="80" B="80" />
+                                <shininess value="1" />
+                            </color>
+                        </model>
+                    </models>
+                </group>
+            </group>
+        </group>
+
+        <!-- ==================== Mars + Phobos + Deimos ==================== -->
+        <group>
+            <transform>
+                <rotate time="20" x="0" y="1" z="0" />
+                <translate x="13" y="0" z="0" />
+            </transform>
+            <!-- Mars -->
+            <group>
+                <transform>
+                    <rotate time="5" x="0" y="1" z="0" />
+                    <scale x="0.35" y="0.35" z="0.35" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="mars.jpg" />
+                        <color>
+                            <diffuse R="200" G="200" B="200" />
+                            <ambient R="80" G="80" B="80" />
+                            <shininess value="5" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Phobos -->
+            <group>
+                <transform>
+                    <rotate time="3" x="0" y="1" z="0" />
+                    <translate x="1.0" y="0" z="0" />
+                    <scale x="0.06" y="0.06" z="0.06" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color>
+                            <diffuse R="150" G="140" B="130" />
+                            <ambient R="60" G="60" B="60" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Deimos -->
+            <group>
+                <transform>
+                    <rotate time="5" x="0" y="1" z="0" />
+                    <translate x="1.4" y="0" z="0" />
+                    <scale x="0.05" y="0.05" z="0.05" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color>
+                            <diffuse R="140" G="130" B="120" />
+                            <ambient R="60" G="60" B="60" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- ==================== Asteroid Belt ==================== -->
+        <group>
+            <transform>
+                <rotate angle="356.5" x="0" y="1" z="0" />
+                <rotate time="74" x="0" y="1" z="0" />
+                <translate x="15.70" y="0.05" z="0" />
+                <scale x="0.053" y="0.053" z="0.053" />
+            </transform>
+            <models>
+                <model file="box_1_1.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="27.3" x="0" y="1" z="0" />
+                <rotate time="67" x="0" y="1" z="0" />
+                <translate x="15.58" y="0.00" z="0" />
+                <scale x="0.051" y="0.051" z="0.051" />
+            </transform>
+            <models>
+                <model file="cone_1_2_4_3.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="51.4" x="0" y="1" z="0" />
+                <rotate time="47" x="0" y="1" z="0" />
+                <translate x="15.62" y="-0.02" z="0" />
+                <scale x="0.083" y="0.083" z="0.083" />
+            </transform>
+            <models>
+                <model file="box_1_1.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="92.6" x="0" y="1" z="0" />
+                <rotate time="43" x="0" y="1" z="0" />
+                <translate x="16.26" y="-0.13" z="0" />
+                <scale x="0.073" y="0.073" z="0.073" />
+            </transform>
+            <models>
+                <model file="box_1_1.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="110.9" x="0" y="1" z="0" />
+                <rotate time="47" x="0" y="1" z="0" />
+                <translate x="16.62" y="-0.06" z="0" />
+                <scale x="0.056" y="0.056" z="0.056" />
+            </transform>
+            <models>
+                <model file="sphere_1_8_8.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="146.2" x="0" y="1" z="0" />
+                <rotate time="80" x="0" y="1" z="0" />
+                <translate x="16.56" y="-0.10" z="0" />
+                <scale x="0.073" y="0.073" z="0.073" />
+            </transform>
+            <models>
+                <model file="box_1_1.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="177.4" x="0" y="1" z="0" />
+                <rotate time="53" x="0" y="1" z="0" />
+                <translate x="16.21" y="-0.13" z="0" />
+                <scale x="0.052" y="0.052" z="0.052" />
+            </transform>
+            <models>
+                <model file="cone_1_2_4_3.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="213.6" x="0" y="1" z="0" />
+                <rotate time="69" x="0" y="1" z="0" />
+                <translate x="16.06" y="-0.06" z="0" />
+                <scale x="0.073" y="0.073" z="0.073" />
+            </transform>
+            <models>
+                <model file="cone_1_2_4_3.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="236.0" x="0" y="1" z="0" />
+                <rotate time="76" x="0" y="1" z="0" />
+                <translate x="16.53" y="0.06" z="0" />
+                <scale x="0.060" y="0.060" z="0.060" />
+            </transform>
+            <models>
+                <model file="cone_1_2_4_3.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="270.5" x="0" y="1" z="0" />
+                <rotate time="44" x="0" y="1" z="0" />
+                <translate x="16.64" y="0.07" z="0" />
+                <scale x="0.062" y="0.062" z="0.062" />
+            </transform>
+            <models>
+                <model file="box_1_1.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="300.2" x="0" y="1" z="0" />
+                <rotate time="66" x="0" y="1" z="0" />
+                <translate x="15.71" y="-0.05" z="0" />
+                <scale x="0.087" y="0.087" z="0.087" />
+            </transform>
+            <models>
+                <model file="box_1_1.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+        <group>
+            <transform>
+                <rotate angle="339.2" x="0" y="1" z="0" />
+                <rotate time="60" x="0" y="1" z="0" />
+                <translate x="15.60" y="0.02" z="0" />
+                <scale x="0.082" y="0.082" z="0.082" />
+            </transform>
+            <models>
+                <model file="cone_1_2_4_3.3d">
+                    <color>
+                        <diffuse R="130" G="120" B="110" />
+                        <ambient R="50" G="50" B="50" />
+                    </color>
+                </model>
+            </models>
+        </group>
+
+        <!-- ==================== Jupiter + Galilean Moons ==================== -->
+        <group>
+            <transform>
+                <rotate time="35" x="0" y="1" z="0" />
+                <translate x="19" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
+                    <scale x="1.50" y="1.50" z="1.50" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="jupiter.jpg" />
+                        <color>
+                            <diffuse R="200" G="200" B="200" />
+                            <ambient R="80" G="80" B="80" />
+                            <shininess value="5" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Io -->
+            <group>
+                <transform>
+                    <rotate time="3" x="0" y="1" z="0" />
+                    <translate x="2.5" y="0" z="0" />
+                    <scale x="0.15" y="0.15" z="0.15" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color>
+                            <diffuse R="200" G="180" B="100" />
+                            <ambient R="80" G="70" B="40" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Europa -->
+            <group>
+                <transform>
+                    <rotate time="5" x="0" y="1" z="0" />
+                    <translate x="3.0" y="0" z="0" />
+                    <scale x="0.14" y="0.14" z="0.14" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color>
+                            <diffuse R="180" G="180" B="200" />
+                            <ambient R="70" G="70" B="80" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Ganymede -->
+            <group>
+                <transform>
+                    <rotate time="7" x="0" y="1" z="0" />
+                    <translate x="3.6" y="0" z="0" />
+                    <scale x="0.18" y="0.18" z="0.18" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color>
+                            <diffuse R="150" G="150" B="140" />
+                            <ambient R="60" G="60" B="60" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Callisto -->
+            <group>
+                <transform>
+                    <rotate time="10" x="0" y="1" z="0" />
+                    <translate x="4.2" y="0" z="0" />
+                    <scale x="0.17" y="0.17" z="0.17" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color>
+                            <diffuse R="120" G="120" B="120" />
+                            <ambient R="50" G="50" B="50" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- ==================== Saturn + Ring (textured) + Titan ==================== -->
+        <group>
+            <transform>
+                <rotate time="50" x="0" y="1" z="0" />
+                <translate x="25" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="4" x="0" y="1" z="0" />
+                    <scale x="1.30" y="1.30" z="1.30" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="saturn.jpg" />
+                        <color>
+                            <diffuse R="200" G="200" B="200" />
+                            <ambient R="80" G="80" B="80" />
+                            <shininess value="5" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Ring (textured, flattened sphere tilted 20 degrees) -->
+            <group>
+                <transform>
+                    <rotate angle="20" x="1" y="0" z="0" />
+                    <scale x="2.5" y="0.02" z="2.5" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="saturn_ring.png" />
+                        <color>
+                            <diffuse R="200" G="180" B="140" />
+                            <ambient R="80" G="70" B="55" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+            <!-- Titan -->
+            <group>
+                <transform>
+                    <rotate time="6" x="0" y="1" z="0" />
+                    <translate x="3.0" y="0" z="0" />
+                    <scale x="0.22" y="0.22" z="0.22" />
+                </transform>
+                <models>
+                    <model file="sphere_1_10_10.3d">
+                        <color>
+                            <diffuse R="220" G="150" B="50" />
+                            <ambient R="80" G="60" B="20" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- ==================== Uranus ==================== -->
+        <group>
+            <transform>
+                <rotate time="60" x="0" y="1" z="0" />
+                <translate x="30" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="5" x="0" y="1" z="0" />
+                    <scale x="0.90" y="0.90" z="0.90" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="uranus.jpg" />
+                        <color>
+                            <diffuse R="200" G="200" B="200" />
+                            <ambient R="80" G="80" B="80" />
+                            <shininess value="5" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- ==================== Neptune ==================== -->
+        <group>
+            <transform>
+                <rotate time="70" x="0" y="1" z="0" />
+                <translate x="34" y="0" z="0" />
+            </transform>
+            <group>
+                <transform>
+                    <rotate time="5" x="0" y="1" z="0" />
+                    <scale x="0.85" y="0.85" z="0.85" />
+                </transform>
+                <models>
+                    <model file="sphere_1_20_20.3d">
+                        <texture file="neptune.jpg" />
+                        <color>
+                            <diffuse R="200" G="200" B="200" />
+                            <ambient R="80" G="80" B="80" />
+                            <shininess value="5" />
+                        </color>
+                    </model>
+                </models>
+            </group>
+        </group>
+
+        <!-- ==================== Comet (Teapot via Bezier) ==================== -->
+        <group>
+            <transform>
+                <translate time="12" align="True">
+                    <point x="-15" y="2" z="-15" />
+                    <point x="15" y="5" z="-8" />
+                    <point x="22" y="8" z="8" />
+                    <point x="15" y="-3" z="18" />
+                    <point x="-15" y="2" z="15" />
+                    <point x="-22" y="5" z="8" />
+                    <point x="-20" y="2" z="-8" />
+                    <point x="-18" y="-3" z="-12" />
+                </translate>
+                <scale x="0.4" y="0.4" z="0.4" />
+            </transform>
+            <models>
+                <model file="bezier_10.3d">
+                    <color>
+                        <diffuse R="150" G="180" B="200" />
+                        <ambient R="60" G="70" B="80" />
+                        <specular R="255" G="255" B="255" />
+                        <shininess value="100" />
+                    </color>
+                </model>
+            </models>
+        </group>
+
+    </group>
+</world>

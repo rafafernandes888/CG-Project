@@ -1,0 +1,55 @@
+<world>
+    <window width="800" height="800" />
+    <camera>
+        <position x="4" y="3" z="4" />
+        <lookAt x="0" y="0.5" z="0" />
+        <up x="0" y="1" z="0" />
+        <projection fov="60" near="1" far="1000" />
+    </camera>
+    <lights>
+        <light type="point" posX="4" posY="6" posZ="4" />
+    </lights>
+    <group>
+        <transform>
+            <translate x="-1.5" y="1" z="0" />
+            <rotate time="8" x="0" y="1" z="0" />
+        </transform>
+        <models>
+            <model file="sphere_1_20_20.3d">
+                <texture file="earth.jpg" />
+                <color>
+                    <diffuse R="200" G="200" B="200" />
+                    <ambient R="50" G="50" B="50" />
+                    <specular R="80" G="80" B="80" />
+                    <shininess value="30" />
+                </color>
+            </model>
+        </models>
+    </group>
+    <group>
+        <transform>
+            <translate x="1.5" y="0.5" z="0" />
+            <rotate time="12" x="0" y="1" z="0" />
+        </transform>
+        <models>
+            <model file="box_2_3.3d">
+                <texture file="moon.jpg" />
+                <color>
+                    <diffuse R="200" G="200" B="200" />
+                    <ambient R="50" G="50" B="50" />
+                </color>
+            </model>
+        </models>
+    </group>
+    <group>
+        <transform><scale x="8" y="1" z="8" /></transform>
+        <models>
+            <model file="plane_2_3.3d">
+                <color>
+                    <diffuse R="80" G="80" B="80" />
+                    <ambient R="20" G="20" B="20" />
+                </color>
+            </model>
+        </models>
+    </group>
+</world>

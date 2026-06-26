@@ -10,9 +10,11 @@ public:
     Window window;
     Camera camera;
     Group root;
+    std::vector<Light> lights;
 
     Configuration() = default;
-    Configuration(const Window& window, const Camera& camera, const Group& root);
+    Configuration(const Window& window, const Camera& camera, const Group& root,
+                  const std::vector<Light>& lights);
 };
 
 #endif

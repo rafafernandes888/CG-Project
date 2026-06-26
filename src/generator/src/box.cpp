@@ -4,81 +4,83 @@
 
 #include "../../shared/include/utils.hpp"
 
-std::vector<Point> boxTriangles(float length, int divisions) {
-  float halfSize = length / 2.0f;
-  float step = length / divisions;
+std::vector<Vertex> boxTriangles(float length, int divisions) {
+    float h = length / 2.0f;
+    float step = length / divisions;
 
-  std::vector<Point> points;
+    std::vector<Vertex> verts;
 
-  for (int i = 0; i < divisions; ++i) {
-    for (int j = 0; j < divisions; ++j) {
-      float v1 = -halfSize + i * step;
-      float u1 = -halfSize + j * step;
-      float v2 = v1 + step;
-      float u2 = u1 + step;
+    for (int i = 0; i < divisions; ++i) {
+        for (int j = 0; j < divisions; ++j) {
+            float a1 = -h + i * step;
+            float b1 = -h + j * step;
+            float a2 = a1 + step;
+            float b2 = b1 + step;
 
-      points.push_back(Point(v1, u1, halfSize));
-      points.push_back(Point(v2, u2, halfSize));
-      points.push_back(Point(v1, u2, halfSize));
+            float u1 = (float)i / divisions;
+            float v1 = (float)j / divisions;
+            float u2 = (float)(i+1) / divisions;
+            float v2 = (float)(j+1) / divisions;
 
-      points.push_back(Point(v1, u1, halfSize));
-      points.push_back(Point(v2, u1, halfSize));
-      points.push_back(Point(v2, u2, halfSize));
+            // Front (z = +h)
+            verts.push_back(Vertex(a1,b1,h, 0,0,1, u1,v1));
+            verts.push_back(Vertex(a2,b2,h, 0,0,1, u2,v2));
+            verts.push_back(Vertex(a1,b2,h, 0,0,1, u1,v2));
+            verts.push_back(Vertex(a1,b1,h, 0,0,1, u1,v1));
+            verts.push_back(Vertex(a2,b1,h, 0,0,1, u2,v1));
+            verts.push_back(Vertex(a2,b2,h, 0,0,1, u2,v2));
 
-      points.push_back(Point(v1, u1, -halfSize));
-      points.push_back(Point(v1, u2, -halfSize));
-      points.push_back(Point(v2, u2, -halfSize));
+            // Back (z = -h)
+            verts.push_back(Vertex(a1,b1,-h, 0,0,-1, u2,v1));
+            verts.push_back(Vertex(a1,b2,-h, 0,0,-1, u2,v2));
+            verts.push_back(Vertex(a2,b2,-h, 0,0,-1, u1,v2));
+            verts.push_back(Vertex(a1,b1,-h, 0,0,-1, u2,v1));
+            verts.push_back(Vertex(a2,b2,-h, 0,0,-1, u1,v2));
+            verts.push_back(Vertex(a2,b1,-h, 0,0,-1, u1,v1));
 
-      points.push_back(Point(v1, u1, -halfSize));
-      points.push_back(Point(v2, u2, -halfSize));
-      points.push_back(Point(v2, u1, -halfSize));
+            // Left (x = -h)
+            verts.push_back(Vertex(-h,b1,a1, -1,0,0, u1,v1));
+            verts.push_back(Vertex(-h,b1,a2, -1,0,0, u2,v1));
+            verts.push_back(Vertex(-h,b2,a2, -1,0,0, u2,v2));
+            verts.push_back(Vertex(-h,b1,a1, -1,0,0, u1,v1));
+            verts.push_back(Vertex(-h,b2,a2, -1,0,0, u2,v2));
+            verts.push_back(Vertex(-h,b2,a1, -1,0,0, u1,v2));
 
-      points.push_back(Point(-halfSize, v1, u1));
-      points.push_back(Point(-halfSize, v1, u2));
-      points.push_back(Point(-halfSize, v2, u2));
+            // Right (x = +h)
+            verts.push_back(Vertex(h,b1,a1, 1,0,0, u2,v1));
+            verts.push_back(Vertex(h,b2,a1, 1,0,0, u2,v2));
+            verts.push_back(Vertex(h,b2,a2, 1,0,0, u1,v2));
+            verts.push_back(Vertex(h,b1,a1, 1,0,0, u2,v1));
+            verts.push_back(Vertex(h,b2,a2, 1,0,0, u1,v2));
+            verts.push_back(Vertex(h,b1,a2, 1,0,0, u1,v1));
 
-      points.push_back(Point(-halfSize, v1, u1));
-      points.push_back(Point(-halfSize, v2, u2));
-      points.push_back(Point(-halfSize, v2, u1));
+            // Top (y = +h)
+            verts.push_back(Vertex(a1,h,b1, 0,1,0, u1,v1));
+            verts.push_back(Vertex(a1,h,b2, 0,1,0, u1,v2));
+            verts.push_back(Vertex(a2,h,b2, 0,1,0, u2,v2));
+            verts.push_back(Vertex(a1,h,b1, 0,1,0, u1,v1));
+            verts.push_back(Vertex(a2,h,b2, 0,1,0, u2,v2));
+            verts.push_back(Vertex(a2,h,b1, 0,1,0, u2,v1));
 
-      points.push_back(Point(halfSize, v1, u1));
-      points.push_back(Point(halfSize, v2, u1));
-      points.push_back(Point(halfSize, v2, u2));
-
-      points.push_back(Point(halfSize, v1, u1));
-      points.push_back(Point(halfSize, v2, u2));
-      points.push_back(Point(halfSize, v1, u2));
-
-      points.push_back(Point(v1, halfSize, u1));
-      points.push_back(Point(v1, halfSize, u2));
-      points.push_back(Point(v2, halfSize, u2));
-
-      points.push_back(Point(v1, halfSize, u1));
-      points.push_back(Point(v2, halfSize, u2));
-      points.push_back(Point(v2, halfSize, u1));
-
-      points.push_back(Point(v1, -halfSize, u1));
-      points.push_back(Point(v2, -halfSize, u1));
-      points.push_back(Point(v2, -halfSize, u2));
-
-      points.push_back(Point(v1, -halfSize, u1));
-      points.push_back(Point(v2, -halfSize, u2));
-      points.push_back(Point(v1, -halfSize, u2));
+            // Bottom (y = -h)
+            verts.push_back(Vertex(a1,-h,b1, 0,-1,0, u1,v2));
+            verts.push_back(Vertex(a2,-h,b1, 0,-1,0, u2,v2));
+            verts.push_back(Vertex(a2,-h,b2, 0,-1,0, u2,v1));
+            verts.push_back(Vertex(a1,-h,b1, 0,-1,0, u1,v2));
+            verts.push_back(Vertex(a2,-h,b2, 0,-1,0, u2,v1));
+            verts.push_back(Vertex(a1,-h,b2, 0,-1,0, u1,v1));
+        }
     }
-  }
 
-  return points;
+    return verts;
 }
 
 bool generateBox(float length, int divisions, const char* filepath) {
-  std::vector<Point> triangles = boxTriangles(length, divisions);
-
-  if (triangles.empty()) {
-    std::cerr << "Error: Empty vector of triangles.\n";
-    return false;
-  }
-
-  saveToFile(triangles, filepath);
-
-  return true;
+    std::vector<Vertex> triangles = boxTriangles(length, divisions);
+    if (triangles.empty()) {
+        std::cerr << "Error: Empty vector of triangles.\n";
+        return false;
+    }
+    saveToFile(triangles, filepath);
+    return true;
 }

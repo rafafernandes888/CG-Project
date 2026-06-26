@@ -1,0 +1,63 @@
+<world>
+    <window width="800" height="800" />
+    <camera>
+        <position x="5" y="5" z="5" />
+        <lookAt x="0" y="0" z="0" />
+        <up x="0" y="1" z="0" />
+        <projection fov="60" near="1" far="1000" />
+    </camera>
+    <lights>
+        <light type="point" posX="0" posY="8" posZ="0" />
+        <light type="directional" dirX="1" dirY="-1" dirZ="0" />
+    </lights>
+    <group>
+        <transform><translate x="-3" y="1" z="0" /></transform>
+        <models>
+            <model file="sphere_1_20_20.3d">
+                <color>
+                    <diffuse R="200" G="50" B="50" />
+                    <ambient R="50" G="15" B="15" />
+                    <specular R="255" G="255" B="255" />
+                    <shininess value="128" />
+                </color>
+            </model>
+        </models>
+    </group>
+    <group>
+        <transform><translate x="0" y="1" z="0" /></transform>
+        <models>
+            <model file="sphere_1_20_20.3d">
+                <color>
+                    <diffuse R="50" G="200" B="50" />
+                    <ambient R="15" G="50" B="15" />
+                    <specular R="255" G="255" B="255" />
+                    <shininess value="128" />
+                </color>
+            </model>
+        </models>
+    </group>
+    <group>
+        <transform><translate x="3" y="1" z="0" /></transform>
+        <models>
+            <model file="sphere_1_20_20.3d">
+                <color>
+                    <diffuse R="50" G="50" B="200" />
+                    <ambient R="15" G="15" B="50" />
+                    <specular R="255" G="255" B="255" />
+                    <shininess value="128" />
+                </color>
+            </model>
+        </models>
+    </group>
+    <group>
+        <transform><scale x="10" y="1" z="10" /></transform>
+        <models>
+            <model file="plane_2_3.3d">
+                <color>
+                    <diffuse R="120" G="120" B="120" />
+                    <ambient R="30" G="30" B="30" />
+                </color>
+            </model>
+        </models>
+    </group>
+</world>

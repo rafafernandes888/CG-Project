@@ -4,5 +4,6 @@
 #include "group.hpp"
 
 void drawGroup(Group& group);
+void setupLights(const std::vector<Light>& lights);
 
 #endif  // DRAW_HPP

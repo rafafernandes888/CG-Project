@@ -11,10 +11,11 @@ CG/
 │   ├── models/       # Modelos gerados em formato .3d
 │   ├── scenes/       # Ficheiros XML das cenas
 │   ├── shared/       # Código partilhado entre os módulos
+│   ├── textures/
 │   └── CMakeLists.txt
 ├── build/            # Diretório onde os binários são compilados
 ├── libs/             # Biblioteca RapidXML
-├── toolkits/         # Ficheiros adicionais e dependências (GLUT, GLEW)
+├── toolkits/         # Ficheiros adicionais e dependências (GLUT, GLEW, DevIL)
 ├── CMakeLists.txt    # Configuração principal do CMake
 └── README.md
 ```
@@ -66,17 +67,19 @@ $ .\generator.exe plane 2 3 "..\..\..\..\src\models\plane_2_3.3d"
 > Nota: Todos os ficheiros gerados pelo **generator** devem ser criados/movidos para a pasta `src/models/` para que o Engine os encontre.
 
 ### 🌌 Guia Rápido: Sistema Solar Dinâmico
-Para visualizar a cena de demonstração principal (`solar_system.xml`), é necessário gerar os modelos base que esta utiliza. Estando no diretório raiz do projeto (`CG`), execute no seu terminal (ajuste o caminho se não estiver em Windows):
+Para visualizar a cena de demonstração principal (`solar_system4.xml`), é necessário gerar os modelos base que esta utiliza. Estando no diretório raiz do projeto (`CG`), execute no seu terminal (ajuste o caminho se não estiver em Windows):
 
-```sh
 # 1. Gerar as esferas
 $ .\build\src\generator\Release\generator.exe sphere 1 20 20 src\models\sphere_1_20_20.3d
 $ .\build\src\generator\Release\generator.exe sphere 1 10 10 src\models\sphere_1_10_10.3d
 $ .\build\src\generator\Release\generator.exe sphere 1 8 8 src\models\sphere_1_8_8.3d
 
-# 2. Gerar o cometa a partir do patch de Bézier
-$ .\build\src\generator\Release\generator.exe bezier src\models\teapot.patch 10 src\models\teapot.3d
-```
+# 2. Gerar a caixa e o cone (cintura de asteróides)
+$ .\build\src\generator\Release\generator.exe box 1 1 src\models\box_1_1.3d
+$ .\build\src\generator\Release\generator.exe cone 1 2 4 3 src\models\cone_1_2_4_3.3d
+
+# 3. Gerar o cometa (teapot de Bézier)
+$ .\build\src\generator\Release\generator.exe bezier src\models\teapot.patch 10 src\models\bezier_10.3d
 
 Após gerar estes ficheiros, a cena do Sistema Solar está pronta a ser executada no motor gráfico (ver secção abaixo).
 
@@ -109,6 +112,7 @@ $ .\engine.exe ..\..\..\..\src\scenes\solar_system.xml
 | `m` | Alternar modo de renderização (wireframe / pontos / preenchido) |
 | `c` | Ativar/desativar a visualização das curvas de Catmull-Rom |
 | `r` | Reiniciar posição da câmara |
+| `n` | Ativar/desativar visualização das normais |
 
 ## ✍️ Desenvolvido por
 

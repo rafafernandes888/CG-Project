@@ -7,6 +7,6 @@
 #include "group.hpp"
 
 Configuration parseConfig(const std::string& filename);
-Group parseGroup(rapidxml::xml_node<>* groupNode, const std::string& modelsDir);
+Group parseGroup(rapidxml::xml_node<>* groupNode, const std::string& modelsDir, const std::string& texturesDir);
 
 #endif
